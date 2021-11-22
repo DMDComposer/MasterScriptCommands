@@ -1,7 +1,7 @@
 #Include <Default_Settings>
 #Include <Neutron>
 #Include <cJson>
-
+;
 ; NOTE: Must run on admin to enable MSC toggle on all windows
 if (! A_IsAdmin){ ;http://ahkscript.org/docs/Variables.htm#IsAdmin
 	Run *RunAs "%A_ScriptFullPath%"  ; Requires v1.0.92.01+
