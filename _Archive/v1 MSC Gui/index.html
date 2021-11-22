@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- scripts -->
+    <script src="./includes/jquery.min.js"></script>
+    <script src="./includes/bootstrap.min.js"></script>
+    <script src="./Includes/elasticlunr.min.js"></script>
+    <script src="./includes/fontawesome-free/js/all.min.js"></script>
+
+    <link href="./Includes/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Fetch API & ES6 Promise Return Handlers -->
+    <script src="./includes/fetch-polyfill/fetch.js"></script>
+    <script src="./includes/es6-promise/dist/es6-promise.min.js"></script>
+    <script src="./includes/es6-promise/dist/es6-promise.auto.min.js"></script>
+
+    <script src="./includes/scripts.js"></script>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+
+  <body onmousedown="neutron.DragTitleBar()">
+    <!-- Title Bar -->
+    <header></header>
+    <!-- Main content area -->
+    <div class="container-flex" id="mscContainerDIV">
+      <div class="div-resultsTotal"></div>
+      <!-- Search form -->
+      <!-- <form
+        class="form-inline d-flex justify-content-center md-form form-sm mt-0"
+        id="mscSearchDIV"
+      >
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input
+          type="text"
+          class="form-control form-control-sm ml-3 w-75"
+          placeholder="Search"
+          aria-label="Search"
+          id="mscSearch"
+        />
+      </form> -->
+      <!-- search engine -->
+      <div class="container-fluid search" style="overflow-x: hidden;">
+        <div class="form-row" id="divMSCTitle">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            <!-- <i class="fas fa-search" aria-hidden="true"></i> -->
+            <span class='mscIcon'></span>
+            <span class='mscTitle'>Master Script Commands</span>
+          </div>
+          <div class="col-md-4"></div>
+        </div>
+        <div class="col-md-12" id="divMSCResults">
+            <div class="form-group col-md-12">
+              <input
+                type="text"
+                class="search-input form-control"
+                autofocus="autofocus"
+                placeholder="Search"
+                aria-describedby="Search"
+                id="search"
+              />
+            </div>
+          <div class="container-fluid results" style="overflow: auto;"></div>
+      </div>
+    </div>
+    <!-- /container -->
+    <!-- /main -->
+  </body>
+</html>

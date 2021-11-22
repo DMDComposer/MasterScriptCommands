@@ -1,0 +1,121 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  scroll-behavior: smooth;
+  scrollbar-color: white #ffeff5;
+  background: #1d1f21;
+  position: relative;
+  scrollbar-face-color: rgba(255, 0, 0, 0.6);
+  scrollbar-shadow-color: rgba(255, 0, 0, 0.6);
+  scrollbar-highlight-color: rgba(255, 0, 0, 0.6);
+  scrollbar-3dlight-color: rgba(255, 0, 0, 0.6);
+  scrollbar-darkshadow-color: rgba(255, 0, 0, 0.6);
+  scrollbar-track-color: #252526;
+  scrollbar-arrow-color: rgba(255, 0, 0, 0.6);
+}
+
+#divMSCTitle {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.mscIcon {
+  background: url("./Icon.ico") no-repeat center center;
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  font-size: 17px;
+  fill: #d7dce2;
+  transition: all 0.2s ease-in-out;
+  animation: mscIconSpin 12s linear infinite;
+  animation-delay: 4s;
+}
+/* Spin mscIcon CSS */
+@keyframes mscIconSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  8.33%,
+  25% {
+    transform: rotate(90deg);
+  }
+  33.33%,
+  50% {
+    transform: rotate(180deg);
+  }
+  58.33%,
+  75% {
+    transform: rotate(270deg);
+  }
+  83.33%,
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.mscTitle {
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  margin-left: -80px;
+}
+
+#search {
+  color: #fff;
+  background-color: #1d1f21;
+}
+#search:focus {
+  border-color: rgba(255, 0, 0, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
+}
+
+.resultsEmpty {
+  text-align: center;
+}
+
+#div-resultsFiltered {
+  /* text-align: center; */
+}
+
+.results {
+  overflow-y: auto !important;
+  max-height: 290px !important;
+}
+#divResultsCommand {
+  font-size: 0.9em;
+  display: inline-block;
+  align-items: left;
+  justify-content: flex-start;
+}
+
+#divResultsComment {
+  font-size: 0.9em;
+  display: inline-block;
+  align-items: left;
+  justify-content: flex-end;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  line-height: 1em;
+  max-height: 1em;
+}
+
+.div-resultsTotal {
+  display: inline-block;
+  width: 8em;
+  height: 1em;
+  line-height: 1em;
+  font-size: 10px;
+  color: #fff;
+  position: absolute;
+  right: -40px;
+  @media <= 1400px {
+    top: 135px;
+  }
+  @media > 1400px {
+    top: 85px;
+    line-height: 3px;
+  }
+}

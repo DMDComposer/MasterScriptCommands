@@ -1,0 +1,13 @@
+﻿;~ Tomorrow Night Color Definitions:
+cBackground 		:= "c" . "1d1f21"
+cCurrentLine 		:= "c" . "282a2e"
+cSelection 		:= "c" . "373b41"
+cForeground 		:= "c" . "c5c8c6"
+cComment 			:= "c" . "969896"
+cRed 			:= "c" . "cc6666"
+cOrange 			:= "c" . "de935f"
+cYellow 			:= "c" . "f0c674"
+cGreen 			:= "c" . "b5bd68"
+cAqua 			:= "c" . "8abeb7"
+cBlue 			:= "c" . "81a2be"
+cPurple 			:= "c" . "b294bb"
