@@ -23,8 +23,7 @@ if (MasterScriptCommands = "lf"){ ;~ Testing area
 	; gui_destroy()
 	Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 	;~ m(A_LineFile)
-	IniRead, vVar, % A_LineFile "\..\..\..\Hotstring Directory Paths\Directory Paths.ini"
-	m(vVar)
+	; IniRead, vVar, % A_LineFile "\..\..\..\Hotstring Directory Paths\Directory Paths.ini"
 }
 else if(MasterScriptCommands = "ahk "){ ;~ Search for AHK Related Info
 	gui_Change_Title("Autohotkey Google Search",,"#00FF00",Icon_AHK)

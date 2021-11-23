@@ -296,7 +296,8 @@ function resetHighlightedDiv(next) {
 function resetSearchAttributes() {
   if ($("#mscSearchInput").length) {
     $("#mscSearchInput").attr("id", "search")
-    $(".mscIcon").css("background", 'url("./Icon.ico") no-repeat center center')
+    // $(".mscIcon").css("background", 'url("./Icon.ico") no-repeat center center')
+    $(".mscIcon").attr("src", "./Icon.ico")
     $(".mscTitle").text("Master Script Commands")
     $(".mscTitle").css("color", "#fff")
     $("#search").css({

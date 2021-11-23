@@ -19,7 +19,7 @@ global vIni_Dir_Path := A_Dropbox "\AHK Scripts\_DMD Scripts\Hotstring Directory
 ; #Include <JSON> ; Have to include JSON library for Parsing JSON Objects
 DetectHiddenWindows, Off ; Ensure Window is off unless specificed by command. Important for certain AHK scripts for this to be off
 ; A note on how this works:
-; The function name "gui_search()"
+; The function name "mscSearchUrls()"
 ; What you actually specify as the parameter value is a command to Run. It does not have to be a URL.
 ; Before the command is Run, the word REPLACEME is replaced by your input.
 ; It does not have to be a search url, that was just the application I had in mind when I originally wrote it.
@@ -27,13 +27,14 @@ DetectHiddenWindows, Off ; Ensure Window is off unless specificed by command. Im
 
 Switch MasterScriptCommands
 {
-	Case "lf": { ; Testing area
+	Case "aaa": { ; Testing area
 		; Notify().AddWindow("You've made it here", {Title:"Congrats!"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Title"})
 		; t(oDirs.HasKey("drive"))
-		mscSearch()
-		t(MasterScriptCommands)
+		; mscSearch()
+		; t(MasterScriptCommands)
 	}
-	; VSCode Workspace Launches
+	; NOTE: VSCode Workspace Launches
 	Case "vs msc", "vs master search box": {
 		Run, "%A_AppDataLocal%\Programs\Microsoft VS Code\Code.exe" "%A_Dropbox%\AHK Scripts\_DMD Scripts\Master Search Box"
 	}
@@ -75,10 +76,10 @@ Switch MasterScriptCommands
 		DetectHiddenWindows, Off
 	}
 	Case "ahk ": { ; Search for AHK Related Info
-		gui_Change_Title("Autohotkey Google Search",,"#00FF00",./Icons/AHK.ico)
-		gui_search("https://www.google.com/search?num=50&safe=off&site=&source=hp&q=autohotkey%20REPLACEME&btnG=Search&oq=&gs_l=")
-		gui_search("https://www.google.com/search?client=firefox-b-1-d&channel=cus2&sxsrf=ALeKk0356faDBEtpcEjEwIwMscFvTxXMmg%3A1590206661049&ei=xaDIXsXJAq6vytMPh5ChgAU&q=site%3Astackoverflow.com+REPLACEME&oq=site%3Astackoverflow.com+REPLACEME&gs_lcp=CgZwc3ktYWIQA1DwR1iDZGCnZ2gAcAB4AIABhgGIAcQHkgEEMTAuMpgBAKABAqABAaoBB2d3cy13aXo&sclient=psy-ab&ved=0ahUKEwiFwJq5jcnpAhWul3IEHQdICFAQ4dUDCAs&uact=5")
-		; gui_search("https://www.google.com/search?client=firefox-b-1-d&channel=cus2&sxsrf=ALeKk02CuZqxN5n_fDw_33Asi02z9bthxw%3A1590206200889&ei=-J7IXuruNd6tytMP1b6sgAc&q=site%3Awww.autohotkey.com%2Fboards%2F+REPLACEME&oq=site%3Awww.autohotkey.com%2Fboards%2F+REPLACEME&gs_lcp=CgZwc3ktYWIQAzoECAAQR1CViwlYpK8JYJuyCWgIcAF4AIABTYgBiAqSAQIxOZgBAKABAaoBB2d3cy13aXo&sclient=psy-ab&ved=0ahUKEwjqyuTdi8npAhXelnIEHVUfC3AQ4dUDCAs&uact=5")
+		mscSearch({title:"Autohotkey Google Search",color:"#00FF00",icon:"./Icons/AHK.ico"})
+		mscSearchUrls("https://www.google.com/search?num=50&safe=off&site=&source=hp&q=autohotkey%20REPLACEME&btnG=Search&oq=&gs_l=")
+		mscSearchUrls("https://www.google.com/search?client=firefox-b-1-d&channel=cus2&sxsrf=ALeKk0356faDBEtpcEjEwIwMscFvTxXMmg%3A1590206661049&ei=xaDIXsXJAq6vytMPh5ChgAU&q=site%3Astackoverflow.com+REPLACEME&oq=site%3Astackoverflow.com+REPLACEME&gs_lcp=CgZwc3ktYWIQA1DwR1iDZGCnZ2gAcAB4AIABhgGIAcQHkgEEMTAuMpgBAKABAqABAaoBB2d3cy13aXo&sclient=psy-ab&ved=0ahUKEwiFwJq5jcnpAhWul3IEHQdICFAQ4dUDCAs&uact=5")
+		; mscSearchUrls("https://www.google.com/search?client=firefox-b-1-d&channel=cus2&sxsrf=ALeKk02CuZqxN5n_fDw_33Asi02z9bthxw%3A1590206200889&ei=-J7IXuruNd6tytMP1b6sgAc&q=site%3Awww.autohotkey.com%2Fboards%2F+REPLACEME&oq=site%3Awww.autohotkey.com%2Fboards%2F+REPLACEME&gs_lcp=CgZwc3ktYWIQAzoECAAQR1CViwlYpK8JYJuyCWgIcAF4AIABTYgBiAqSAQIxOZgBAKABAaoBB2d3cy13aXo&sclient=psy-ab&ved=0ahUKEwjqyuTdi8npAhXelnIEHVUfC3AQ4dUDCAs&uact=5")
 	}
 	Case (oDirs.HasKey(MasterScriptCommands) ? MasterScriptCommands : false), (oDirs.HasKey("dir " MasterScriptCommands) ? MasterScriptCommands : false): { ; Add Icon Path to ini File
 		for Key,Value in oDirs {
@@ -115,44 +116,44 @@ Switch MasterScriptCommands
 	}
 	;------------------------------------------------------------------------------
 	Case "album cover", "search album cover": { ; Search Album Covers
-		gui_search_title = Search for Album Covers
-		gui_search("https://www.albumartexchange.com/covers?q=REPLACEME&fltr=ALL&sort=DATE&status=&size=any")
+		mscSearch({title:"Search for Album Covers"})
+		mscSearchUrls("https://www.albumartexchange.com/covers?q=REPLACEME&fltr=ALL&sort=DATE&status=&size=any")
 	}
 	Case "amazon ": { ; Search Amazon
-		gui_Change_Title("Amazon Search","#FF9900")
-		gui_search_title:= "What would you like to search?"
-		gui_search("https://www.amazon.com/s?k=REPLACEME&ref=nb_sb_noss_2")
+		mscSearch({title:"Amazon Search",color:"#FF9900"})
+		mscSearchUrls_title:= "What would you like to search?"
+		mscSearchUrls("https://www.amazon.com/s?k=REPLACEME&ref=nb_sb_noss_2")
 	}
 	Case "fontawesome": { ; Search FontAwesome & Other Icons
-		gui_search_title:= "Search for FontAwesome Icons"
-		gui_search("https://fontawesome.com/icons?d=gallery&p=2&q=REPLACEME&m=free")	
+		mscSearch({title:"Search for FontAwesome Icons"})
+		mscSearchUrls("https://fontawesome.com/icons?d=gallery&p=2&q=REPLACEME&m=free")	
 	}
 	Case "g. ", "google": { ; Search Google
-		gui_Change_Title("Google Search","Let Me Google That For You...","#4285F4")
-		gui_search("https://www.google.com/search?num=50&safe=off&site=&source=hp&q=REPLACEME&btnG=Search&oq=&gs_l=")
+		mscSearch({title:"Google Search",subTitle:"Let Me Google That For You...",color:"#4285F4"})
+		mscSearchUrls("https://www.google.com/search?num=50&safe=off&site=&source=hp&q=REPLACEME&btnG=Search&oq=&gs_l=")
 	}
 	Case "gifs": { ; Search for Gifs
-		gui_search_title:= "Search Giphy for Gifs"
-		gui_search("https://giphy.com/search/REPLACEME")
+		mscSearch({title:"Search Giphy for Gifs"})
+		mscSearchUrls("https://giphy.com/search/REPLACEME")
 	}
 	Case "icon search", "search icons": { ; Search for Icons
-		gui_Change_Title("Icon Search",,"#00FF00",Icon_AHK)
-		gui_search(["https://www.deviantart.com/search?q=REPLACEME%20icons"
+		mscSearch({title:"Icon Search",color:"#00FF00",icon:Icon_AHK})
+		mscSearchUrls(["https://www.deviantart.com/search?q=REPLACEME%20icons"
 		           ,"https://iconscout.com/icons/REPLACEME?price=free"
 		           ,"https://icon-icons.com/search/icons/?filtro=REPLACEME"
 		           ,"https://material.io/resources/icons/?search=REPLACEME&icon=anchor&style=baseline"
 		           ,"https://www.flaticon.com/search?word=REPLACEME&search-type=icons&license=selection&order_by=4&grid=small"])
 	}
 	Case "private ": { ; Private Firefox Window
-		gui_search_title:= "Google Search as Private Window in Firefox"
-		gui_search("C:\Program Files\Mozilla Firefox\firefox.exe -private-window https://www.google.com/search?safe=off&q=REPLACEME")
+		mscSearch({title:"Google Search as Private Window in Firefox"})
+		mscSearchUrls("C:\Program Files\Mozilla Firefox\firefox.exe -private-window https://www.google.com/search?safe=off&q=REPLACEME")
 	}
 	Case "tor. ": { ; Search Torrent Networks
-		gui_Change_Title("Search Torrent Networks",,"#00FF00", A_GoogleDrive "\Folder Icons\IOS Icons\Clay Icons - By octaviotti\ICO\qBittorrent.ico")
+		mscSearch({title:"Search Torrent Networks",color:"#20C6FD", icon:A_GoogleDrive "\Folder Icons\IOS Icons\Clay Icons - By octaviotti\ICO\qBittorrent.ico"})
 		Chrome_Desktop := A_ProgramFiles "\Google\Chrome\Application\chrome.exe"
 		Chrome_Laptop  := A_ProgramFiles64 "\Google\Chrome\Application\chrome.exe"
 		Chrome         := (A_ComputerName != "CHERRYBLOSSOM" ? Chrome_Desktop : Chrome_Laptop)
-		gui_search([Chrome A_Space "https://rutracker.org/forum/tracker.php?nm=REPLACEME"
+		mscSearchUrls([Chrome A_Space "https://rutracker.org/forum/tracker.php?nm=REPLACEME"
 		           ,Chrome A_Space "https://audioclub.in/?s=REPLACEME"
 		           ,Chrome A_Space "https://audioz.download/"
 		           ,Chrome A_Space "https://www.1377x.to/search/REPLACEME/1/"
@@ -162,91 +163,91 @@ Switch MasterScriptCommands
 		; Title:= "New Title"
 	}
 	Case "udemy","Skillshare": { ; Search for Free Udemy Courses
-		gui_Change_Title("Udemy/Skillshare Class Search","Type in the Name of the Class","#00FF84")
-		gui_search(["https://www.google.com/search?sxsrf=ALeKk01lOccrdqCp22gQcH4RUd3zxa3mWw%3A1591452543507&ei=f6PbXr7GHoPj_Aaw_6WgBQ&q=site%3Afreecoursesite.com+puppeteer&oq=site%3Afreecoursesite.com+REPLACEME&gs_lcp=CgZwc3ktYWIQA1DQH1jQH2DpIWgAcAB4AIAB1gGIAeIFkgEFMC4zLjGYAQCgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwj-gaHcru3pAhWDMd8KHbB_CVQQ4dUDCAs&uact=5"
+		mscSearch({title:"Udemy/Skillshare Class Search",subTitle:"Type in the Name of the Class",color:"#00FF84"})
+		mscSearchUrls(["https://www.google.com/search?sxsrf=ALeKk01lOccrdqCp22gQcH4RUd3zxa3mWw%3A1591452543507&ei=f6PbXr7GHoPj_Aaw_6WgBQ&q=site%3Afreecoursesite.com+puppeteer&oq=site%3Afreecoursesite.com+REPLACEME&gs_lcp=CgZwc3ktYWIQA1DQH1jQH2DpIWgAcAB4AIAB1gGIAeIFkgEFMC4zLjGYAQCgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwj-gaHcru3pAhWDMd8KHbB_CVQQ4dUDCAs&uact=5"
 		           ,"https://freecoursesite.us/?s=REPLACEME"
 		           ,"https://www.1377x.to/search/REPLACEME/1/"])
 	}
 	Case "math", "Eval": { ; Perform Math Equation
 		
-		gui_Change_Title("Math Time!","Perform Math","#00FF84")
-		gui_search(m("Fix mE"))
+		mscSearch({title:"Math Time!",subTitle:"Perform Math",color:"#00FF84"})
+		mscSearchUrls(m("Fix mE"))
 	}
 	Case "you ", "youtube ", "yt. ": { ; Search Youtube
-		gui_Change_Title("YouTube Search",,"#E62522",Icon_YouTube)
-		gui_search("https://www.youtube.com/results?search_query=REPLACEME&page=&utm_source=opensearch")
+		mscSearch({title:"YouTube Search",color:"#E62522",icon:Icon_YouTube})
+		mscSearchUrls("https://www.youtube.com/results?search_query=REPLACEME&page=&utm_source=opensearch")
 	}
 	Case "the. ": { ; Search Thesaurus
-		gui_Change_Title("Search Thesaurus",,"#E62522")
-		gui_search("https://www.thesaurus.com/browse/REPLACEME?s=t")	
+		mscSearch({title:"Search Thesaurus",color:"#E62522"})
+		mscSearchUrls("https://www.thesaurus.com/browse/REPLACEME?s=t")	
 	}
 	Case "dic. ": { ; Search Dictionary
-		gui_Change_Title("Search Dictonary",,"#E62522")
-		gui_search("https://www.dictionary.com/browse/REPLACEME?s=t")	
+		mscSearch({title:"Search Dictonary",color:"#E62522"})
+		mscSearchUrls("https://www.dictionary.com/browse/REPLACEME?s=t")	
 	}
 	Case "keys", "hk ahk": { ; List of Key Modifiers AHK Help
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, % "https://www.autohotkey.com/docs/KeyList.htm#Keyboard" 
 	}
 	Case "calendar": { ; Google Calendar
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run https://www.google.com/calendar
 	}
 	Case "note": { ; Notepad
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\System32\notepad.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\System32\notepad.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run Notepad.exe
 		; Run Notepad++.exe
 	}
 	Case "paint", "mspaint": { ; Run MS Paint
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run "C:\Windows\system32\mspaint.exe"
 	}
 	Case "steam": { ; Steam
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_Run(A_ProgramFiles "\Steam\steam.exe")
 	}
 	Case "extract icons": { ; Extract Icons
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_Run("D:\Program Files (x86)\iconsext\iconsext.exe")
 
 	}
 	Case "whats": { ; WhatsAPP
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Toggle_App("WhatsApp", "C:\Users\Dillon\AppData\Local\WhatsApp\WhatsApp.exe")
 	}
 	Case "calc": { ; Calculator
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\System32\calc.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0x464646", Color:"0xFFFFFF", TitleColor:"0xFFFFFF"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\System32\calc.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0x464646", Color:"0xFFFFFF", TitleColor:"0xFFFFFF"})
 		DetectHiddenWindows, Off ; Have to turn off for Calc to appear
 		Toggle_App("Calc", "C:\Windows\System32\calc.exe")
 	}
 	Case "encrypt": { ; Word Encryption
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, "C:\AHK Scripts\Tools\Encryption Tool\Encryption User Tool.ahk"
 	}
 	Case "asfyt ost": { ; Atun-Shei Films YouTube OST Link
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, "https://youtu.be/oPVpWYQuQsU"
 	}
 	Case "spin wheel": { ; Spin Distrokid Wheel
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Program Files\Quick Access Popup\icons\Distrokid.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Program Files\Quick Access Popup\icons\Distrokid.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		;C:\Users\DMDCo\Dropbox\AHK Scripts\_DMD Scripts\Distrokid\Daily Spin Wheel\Distrokid Spin Wheel.ahk
 		; DMD_RunShortcut("C:\AHK Scripts\_DMD Scripts\Master Search Box\UserCommand Run Scripts\Distrokid Spin Wheel.ahk")
 		DMD_RunShortcut(A_LineFile "\..\..\..\Distrokid\Daily Spin Wheel\Distrokid Spin Wheel.ahk")
 	}
 	Case "distrokid week": { ; Distrokid's Weekly Voting Playlist
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Program Files\Quick Access Popup\icons\Distrokid.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Program Files\Quick Access Popup\icons\Distrokid.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_RunShortcut("C:\AHK Scripts\Tools\Chrome\Distrokid Weekly Vote\Distrokid Weekly Vote.ahk")
 	}
 	Case "rel", "refresh": { ; Reload Script
@@ -261,7 +262,7 @@ Switch MasterScriptCommands
 	}
 	Case "_", "master": { ; Reload Master Script
 		 ; removes the GUI even when the reload fails
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_RunShortcut(A_Dropbox "\AHK Scripts\_DMD Scripts\_Master Script\_Master Script.ahk") 	
 	}
 	Case "hosts": { ; Edit Hosts File
@@ -332,7 +333,7 @@ Switch MasterScriptCommands
 	}
 	Case "scripts": { ; Open Script Directory
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_Run(A_Dropbox "\AHK Scripts")
 	}
 	Case "itunes": { ; Itunes
@@ -342,7 +343,7 @@ Switch MasterScriptCommands
 	}
 	Case "amt": { ; Automate My Task
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_RunShortcut(A_Dropbox "\AHK Scripts\Tools\Automate My Task\Automate_my_Task.ahk")
 	}
 	Case "winamp": { ; Winamp
@@ -371,7 +372,7 @@ Switch MasterScriptCommands
 	}
 	Case "cubase convert": { ; Convert Audio or Video files
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:Icon_MSCDefault, Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:Icon_MSCDefault, Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		global Width,Height,FFMpeg,FFMpegFolder
 		FFMpeg       := A_ProgramFiles "\FFmpeg\bin\ffmpeg.exe"
 		FFMpegFolder := A_ProgramFiles "\FFmpeg\bin\"
@@ -391,7 +392,7 @@ Switch MasterScriptCommands
 	}
 	Case "convert": { ; Convert to Mp4
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:Icon_MSCDefault, Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:Icon_MSCDefault, Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		global Width,Height,FFMpeg,FFMpegFolder
 		FFMpeg       := A_ProgramFiles "\FFmpeg\bin\ffmpeg.exe"
 		FFMpegFolder := A_ProgramFiles "\FFmpeg\bin\"
@@ -413,7 +414,7 @@ Switch MasterScriptCommands
 	}
 	Case "Sound": { ; Open Sound Control Panel
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"c:\windows\system32\control.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"c:\windows\system32\control.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, % A_WinDir "\system32\rundll32.exe" " Shell32.dll,Control_RunDLL mmsys.cpl",,, PID
 		vWindow := "ahk_pid " PID
 		while(!WinActive(vWindow))
@@ -423,7 +424,7 @@ Switch MasterScriptCommands
 	}
 	Case "mixer": { ; Open Volume Mixer
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:Icon_MSCDefault, Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:Icon_MSCDefault, Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_RunShortcut(A_LineFile "\..\..\..\Master Search Box\UserCommand Run Scripts\Mixer.ahk")
 	}
 	Case "empty": { ; Empty RecycleBin
@@ -680,17 +681,17 @@ Switch MasterScriptCommands
 	}
 	Case "cmd": { ; Command Prompt
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\System32\cmd.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})	
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\System32\cmd.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})	
 		Run %comspec% /k
 	}
 	Case "facebook audio": { ; Open Facebook Audio to Download MP3
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:Icon_Facebook, Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:Icon_Facebook, Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, "https://m.facebook.com/messages/?entrypoint=jewel&no_hist=1 "
 	}
 	Case "mute": { ; Mute System via RME
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\System32\TotalMixFX.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0x6F6E6E", Color:"0xFFFFFF", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\System32\TotalMixFX.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0x6F6E6E", Color:"0xFFFFFF", TitleColor:"0xFF0000"})
 		vWindow := "ahk_exe TotalMixFX.exe"
 		DetectHiddenWindows, On
 		if !WinExist(vWindow){
@@ -713,7 +714,7 @@ Switch MasterScriptCommands
 	}
 	Case "dorico": { ; Open Dorico Composition Folder
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:Icon_Dorico, Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:Icon_Dorico, Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_Run("F:\Dorico")
 	}
 	Case "hk signal": { ; Hotkeys for Signal
@@ -963,7 +964,7 @@ Switch MasterScriptCommands
 	}
 	Case "reg loc": { ; Run Registry Software Location Software
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\regedit.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\regedit.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, % A_Dropbox "\AHK Scripts\_Master Script\Run\Shortcuts\Reg Software Locations - Shortcut.lnk"
 	}
 	Case "sum of clip": { ; Sum of the Clipboard
@@ -1056,7 +1057,7 @@ Switch MasterScriptCommands
 	}
 	Case "qap": { ; Quick Access Popup
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Program Files\Quick Access Popup\QuickAccessPopup-64-bit.exe", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Program Files\Quick Access Popup\QuickAccessPopup-64-bit.exe", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		; vQAP := A_ProgramFiles64 "\Quick Access Popup\QuickAccessPopup-64-bit.exe"
 		vQAP := A_Dropbox "\Quick Access Popup\QuickAccessPopup-64-bit.exe"
 		Run, % vQAP, % SplitPath(vQAP).dir
@@ -1072,12 +1073,12 @@ Switch MasterScriptCommands
 	}
 	Case "regedit": { ; Open Windows Registry
 			
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\regedit.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})	
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\regedit.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})	
 		Run, regedit
 	}
 	Case "services": { ; Services Windows
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\regedit.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})	
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\regedit.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})	
 		Run, services.msc
 	}
 	Case "install OSC": { ; Install New Version of OSC
@@ -1194,7 +1195,7 @@ Switch MasterScriptCommands
 	}
 	Case "alt codes": { ; Alt Codes for AHK
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Msgbox 
 		(
 		Chr(32) = a space
@@ -1207,11 +1208,11 @@ Switch MasterScriptCommands
 		apiTiny 	:= "https://tinyurl.com/api-create.php?url="    
 		url 		:= apiTiny . EncodeDecodeURI(Clipboard)
 		Clipboard := HttpQuery(url)
-		Notify().AddWindow("Clipboard:= "HttpQuery(url), {Title:MSC_Title(MasterScriptCommands, DIR), Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow("Clipboard:= "HttpQuery(url), {Title:getMSCTitle(MasterScriptCommands, DIR), Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 	}
 	Case "doge": { ; Run DodgeCoin Stocks Fav Windows/Tabs
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		vFoFFox := ["C:\Program Files\Mozilla Firefox\firefox.exe"
 	                ,"https://robinhood.com/crypto/1ef78e1b-049b-4f12-90e5-555dcf2fe204/chart"
 	                ,"https://coinmarketcap.com/"
@@ -1225,12 +1226,12 @@ Switch MasterScriptCommands
 	}
 	Case "highlight": { ; Highlight Area of Screen
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_RunShortcut(A_Dropbox "\AHK Scripts\Tools\Highlight Screen with Rect Box.ahk")
 	}
 	Case "align": { ; Align Text by Variable
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_RunShortcut(A_Dropbox "\AHK Scripts\_DMD Scripts\Align Text by Variable.ahk")
 	}
 	Case "sort clip": { ; Sort Clipboard Alphabetically
@@ -1240,22 +1241,22 @@ Switch MasterScriptCommands
 	}
 	Case "system settings": { ; Advanced System Settings
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\System32\SystemPropertiesAdvanced.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\System32\SystemPropertiesAdvanced.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, "SystemPropertiesAdvanced"
 	}
 	Case "signal save conversation": { ; Save Signal Conversation, Run with VLC x2 Speed
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:Icon_Signal ", 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:Icon_Signal ", 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_RunShortcut(A_Dropbox "\AHK Scripts\_DMD Scripts\Signal\Signal Save Conversation & Run.ahk")
 	}
 	Case "swap editor": { ; Swap Default Editor
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_RunShortcut(A_Dropbox "\AHK Scripts\Joe Glines Nifty Scripts\Editor Swap\Editor Swap.ahk")
 	}
 	Case "kill all ahk": { ; Kill every AHK Script
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Sleep, 2500
 		DetectHiddenWindows, On 
 		WinGet, List, List, ahk_class AutoHotkey	
@@ -1271,17 +1272,17 @@ Switch MasterScriptCommands
 	}
 	Case "icon to dll": { ; Resource Hacker Icon to DLL
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Program Files (x86)\Resource Hacker\ResourceHacker.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Program Files (x86)\Resource Hacker\ResourceHacker.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, % A_ProgramFiles "\Resource Hacker\ResourceHacker.exe"
 	}
 	Case "Startup": { ; Enable / Disable Startup Programs
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_RunShortcut(A_Dropbox "\AHK Scripts\Tools\Add to Startup\AddToStartUp.ahk")
 	}
 	Case "dir qap": { ; Open Quick Access Popup Folder
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})	
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})	
 		Run, % A_ProgramFiles64 "\Quick Access Popup"
 	}
 	Case "list into obj", "list to obj": { ; List to Object
@@ -1310,47 +1311,47 @@ Switch MasterScriptCommands
 	}
 	Case "install OSC": { ; Install New Version of OSC
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:AHK Scripts_Master ScriptResourcesMaster If Commands IconsCogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:AHK Scripts_Master ScriptResourcesMaster If Commands IconsCogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_RunShortcut("C:\AHK Scripts\_DMD Scripts\Master Search Box\UserCommand Run Scripts\OSC Install New Version.ahk")
 	}
 	Case "keyboard OSD": { ; Keyboard OSD
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_RunShortcut("C:\AHK Scripts\Tools\KeyboardOSD\KeysPressedOSD.ahk")
 	}
 	Case "edit dirs": { ; Edit Directory Paths
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, % A_Dropbox "\AHK Scripts\_DMD Scripts\Hotstring Directory Paths\Directory Paths.ini"
 	}
 	Case "temp": { ; Open Temp Folder
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run % A_Temp
 	}
 	Case "message spy": { ; Run Spy++ to catch window messages
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, % A_ProgramFiles "\Microsoft Visual Studio\2017\Community\Common7\Tools\spyxx.exe"
 	}
 	Case "msconfig": { ; MSConfig
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run % A_WinDir "\SysNative\msconfig.exe"
 	}
 	Case "edit Dorico commands": { ; Open Dorico Usermacro Location
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, % A_AppData "\Steinberg\Dorico 3.5\Script Plug-ins"
 	}
 	Case "backup dorico": { ; Backup Dorico
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_Run(A_Dropbox "\AHK Scripts\_DMD Scripts\Dorico Settings Backup & Restore.ahk")
 	}
 	Case "network sharing": { ; Network Sharing Control Panel
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, % "control.exe /name Microsoft.NetworkandSharingCenter"
 	}
 	Case "filepath to html path": { ; Convert file path to HTML path
@@ -1365,7 +1366,7 @@ Switch MasterScriptCommands
 	}
 	Case "ep drop": { ; Open NW Dropbox
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		if FileExist(EnvVars("%LOCALAPPDATA%\Dropbox\info.json"))
 			FileRead, strDropboxJsonFileContent, % EnvVars("%LOCALAPPDATA%\Dropbox\info.json")
 		else if FileExist(EnvVars("%APPDATA%\Dropbox\info.json"))
@@ -1376,7 +1377,7 @@ Switch MasterScriptCommands
 	}
 	Case "ep cpa": { ; Open NW Dropbox CPA
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		if FileExist(EnvVars("%LOCALAPPDATA%\Dropbox\info.json"))
 			FileRead, strDropboxJsonFileContent, % EnvVars("%LOCALAPPDATA%\Dropbox\info.json")
 		else if FileExist(EnvVars("%APPDATA%\Dropbox\info.json"))
@@ -1387,12 +1388,12 @@ Switch MasterScriptCommands
 	}
 	Case "spaces to underscores": { ; Spaces to Underscores
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Clipboard := RegExReplace(Clipboard, "\s", "_")
 	}
 	Case "ep 2mx to folder": { ; 2mx to Netflix folder COPY
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		InputBox, vPath, Folder of 2mxs
 		if (ErrorLevel)
 			return
@@ -1407,7 +1408,7 @@ Switch MasterScriptCommands
 	}
 	Case "ep netflix renaming": { ; Rename files according to Netflix Rules
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		; Fix naming scheme
 		; parse by _
 		MsgBox,48,Warning!,Make local copy (backup) before proceeding as there is no undoing.
@@ -1464,19 +1465,19 @@ Switch MasterScriptCommands
 	}
 	Case "ep hub": { ; NW Script Hub
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run % "D:\Users\Dillon\Dropbox\AHK Scripts\_DMD Scripts\NW Work Scripts\NW Scripts Hub\NW Scripts Hub.ahk"
 	}
 	Case "reset midi": { ; Reset MidiOX
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Program Files (x86)\MIDIOX\midiox.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Program Files (x86)\MIDIOX\midiox.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Process, Close, midiox.exe
 		If !WinExist("ahk_class MIDIOX:Frame")
 			Run, % "C:\Program Files (x86)\MIDIOX\midiox.exe",,Min
 	}
 	Case "install qap": { ; Install New QAP Port Version
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run % A_Dropbox "\AHK Scripts\_DMD Scripts\QAP\QAP Install New Portable Version.ahk"
 	}
 	Case "sum of times": { ; Sum of Times from Clipboard
@@ -1555,17 +1556,17 @@ Switch MasterScriptCommands
 	}
 	Case "crom": { ; Load Remote Server Chrome
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:AHK Scripts_Master ScriptResourcesMaster If Commands IconsCogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:AHK Scripts_Master ScriptResourcesMaster If Commands IconsCogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, % A_MyDocuments "\CROM.rdp"
 	}
 	Case "server": { ; Load Remote Server DMD
 		
 		vExe := A_MyDocuments "\server.rdp"
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:vExe ", 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:vExe ", 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, % vExe
 	}
 	Case "% diff": { ; Percentage Difference Calculator
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		JS =
 		(LTrim Join`n
 			Swal.fire({
@@ -1631,7 +1632,7 @@ Switch MasterScriptCommands
 	}
 	Case "neutron debug": { ; IeChooser
 		
-		Notify().AddWindow(MSC_Title(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run % A_ComSpec "\..\F12\IEChooser.exe"
 	}
 }

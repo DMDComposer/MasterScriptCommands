@@ -42,23 +42,32 @@ RAlt::
 toggleMSC(neutron)
 return
 
-mscSearch() {
+/* mscSearch() {
 	global neutron
 	toggleMSC(neutron)
 }
-
-gui_Change_Title(Title,Subtitle := "What would you like to search?",Color := "",Icon := "") {
+ */
+mscSearch(oOptions*) {
+	; Title,Subtitle := "What would you like to search?",Color := "",Icon := ""
 	global neutron
-	; Set theme / colors for mscSearch
- 	vIcon            := "./Icons/AHK.ico" ; only relative paths
- 	vTextColor       := "#00FF00"
- 	vBackgroundColor := "#00FF00"
- 	vTitle           := "AHK Search"
- 	vSubTitle        := Subtitle
-	neutron.wnd.Eval("$('.mscIcon').css('background','url(""" vIcon """) no-repeat center center')")
-	neutron.wnd.Eval("$('.mscTitle').text('" vTitle "')")
-	neutron.wnd.Eval("$('.mscTitle').css('color', '" vTextColor "')")
-	neutron.wnd.Eval("$('#search:focus').css({'border-color': '" vTextColor "', 'box-shadow': 'inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px " vTextColor "'})")
+	static oKeys := ["title","subTitle","icon","color","background"]
+	      ,searchParams := {title:"Custom Search"
+						   ,subTitle:"What would you like to search?"
+						   ,icon:"./Icons/AHK.ico"
+						   ,color:"#00FF00"
+						   ,background:"#00FF00"}
+	
+	for key,value in oOptions.1 {
+		Loop, % oKeys.Length() {
+			if (key = oKeys[A_Index])
+				searchParams[oKeys[A_Index]] := value
+		}
+	}
+	; neutron.wnd.Eval("$('.mscIcon').css('background','url(""" searchParams.icon """) no-repeat center center')")
+	neutron.wnd.Eval("$('.mscIcon').attr('src','" escapeBackSlash(searchParams.icon) "')")
+	neutron.wnd.Eval("$('.mscTitle').text('" searchParams.title "')")
+	neutron.wnd.Eval("$('.mscTitle').css('color', '" searchParams.color "')")
+	neutron.wnd.Eval("$('#search:focus').css({'border-color': '" searchParams.color "', 'box-shadow': 'inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px " searchParams.color "'})")
 	
 	; change ID of search to enable search functions
 	neutron.wnd.Eval("$('#search').attr('id','mscSearchInput')")
@@ -80,6 +89,9 @@ enableMSCHotkeys() {
 	Hotkey, IfWinActive, % wndUID
 	Hotkey, Down, highlightNextDiv
 	Hotkey, Up, highlightPrevDiv
+}
+escapeBackSlash(string){
+	return RegExReplace(string, "\\", "\\$1")
 }
 getCommand(neutron, ByRef event) {
 	; need to create list from MSC
@@ -162,14 +174,14 @@ getSearchWndPos(neutron){
 }
 highlightNextDiv() {
 	global int, neutron 
-	(int < 0 ? 0 : int)
+	(int <i 0 ? 0 : int)
 	int++
 	; Notify().AddWindow(A_ThisHotkey, {Title: int-1 })
 	neutron.wnd.Eval("highlightNextDiv(" int-1 ")")
 }
 highlightPrevDiv() {
 	global int, neutron
-	(int < 0 ? 0 : int)
+	(int <i 0 ? 0 : int)
 	int--
 	; Notify().AddWindow(A_ThisHotkey, {Title: int })
 	neutron.wnd.Eval("highlightPrevDiv(" int ")")
@@ -251,61 +263,33 @@ return
 RunReload:
 return
 
-
-MSC_Title(MasterScriptCommands, Dir){
-	Static oArray := []
-	Loop, read, % Dir
-	{
-		StringCaseSense, Off 
-		If SubStr(A_LoopReadLine, 1, 1) != ";" 								;~ Do not display commented commands
-		{
-			If A_LoopReadLine contains MasterScriptCommands =		
-			{
-				
-				Trimmed 	:= StrSplit(A_LoopReadLine,"MasterScriptCommands = ") 	;~ Find each line with a "command =" in it
-				Comment 	:= StrSplit(A_LoopReadLine, "`;~ ")	
-				;~ oData 	.= SubStr(Trimmed.2,1,3) A_Space SubStr(Trimmed.2,7) 		;~ Trim line down to just command + comment
-				;~ oData 	.= "`n" 										;~ Breaking each command into a new line
-				oArray.Push(StrSplit(Trimmed.2,Chr(34)).2)					;~ Show Command 3 Digit Number				
-				oArray.Push(Comment.2)									;~ Only show Title no ";~"
-			}
-			
-		}
-	}
-	for a, b in oArray { 												;~ For Next Loop
-		if (b = MasterScriptCommands)
-		{
-			Return oArray[A_Index+1]
+getMSCTitle(MasterScriptCommands, Dir){
+	global oFinalCommandsList
+	for key,value in oFinalCommandsList {
+		if (value.command = MasterScriptCommands) {
+			return value.command
 		}
 	}
 }
 
-gui_search(url) {
+mscSearchUrls(url) {
 	global MSC_Search
 	MSC_Search.Push(url)
 }
 
 gui_search_add_elements:
-for Key, Value in MSC_Search {
-	DMD_Run(StrReplace(Value, "REPLACEME", uriEncode(gui_SearchEdit)))
-	Search_Title := RegExReplace(Value, "s).*?(\d{12}).*?(?=\d{12}|$)", "$1`r`n")
+for key, value in MSC_Search {
+	vURL := StrReplace(value, "REPLACEME", uriEncode(gui_SearchEdit))
+	DMD_Run(vURL)
+	Search_Title := RegExReplace(value, "s).*?(\d{12}).*?(?=\d{12}|$)", "$1`r`n")
 	If (Title = "" ? Title := Search_Title : Title := Title)	
-		t(gui_SearchEdit, {time:3000,stack:1}) 
+		t("<i style='font-size:0.75rem'>" vURL "</i>",{title:gui_SearchEdit,time:3000,stack:1}) 
 }
 MSC_Search := [] ; reset for adding search urls into MSC_Search
 return
-/*
-	; Allow normal CapsLock functionality to be toggled by Alt+CapsLock:
-	!CapsLock::
-	GetKeyState, capsstate, CapsLock, T ;(T indicates a Toggle. capsstate is an arbitrary varible name)
-	if capsstate = U
-		SetCapsLockState, AlwaysOn
-	else
-		SetCapsLockState, AlwaysOff
-	return
-*/
 
-levenshtein_distance( s, t )
+
+/* levenshtein_distance( s, t )
 {
   n := strlen(s)
   m := strlen(t)
@@ -355,7 +339,6 @@ levenshtein_distance( s, t )
   else
     return -1
 }
-
 minimum( a, b, c )
 {
 	min := a
@@ -365,7 +348,12 @@ minimum( a, b, c )
 		min := c
 	return min
 }
+ */
 
+Gui_Close(){
+	Gui, Destroy
+	Return
+}
 
 ; A function to escape characters like & for use in URLs.
 uriEncode(str) {
@@ -456,10 +444,6 @@ Command_Gui(Info){
 	Return
 }
 
-Gui_Close(){
-	Gui, Destroy
-	Return
-}
 
 Base64ToComByteArray(B64){  									; By SKAN / Created: 21-Aug-2017 / Topic: goo.gl/dyDxBN 
 	static CRYPT_STRING_BASE64:=0x1
