@@ -10,18 +10,18 @@ if (! A_IsAdmin){ ;http://ahkscript.org/docs/Variables.htm#IsAdmin
 
 ; TODO: ResetMSC needs to recenter GUI Spawn if user moved it
 ; TODO: Highlight Arrow Keys, Scrollbar Needs to Follow to bottom of list
-
 ; Create a new NeutronWindow and navigate to our HTML page
 oFinalCommandsList := getListOfCommands()
 ; NOTE: Create neutron window & attributes
 neutron := new NeutronWindow()
 neutron.Load("index.html")
-neutron.wnd.onReady(event)             ; Sending the Swal Msg Params for the Popup Msg
+neutron.wnd.onReady(event)             ; Prepping intellisense, getDB()
 neutron.Gui("+LabelMSCNeutronGui")
 global wndToggle     := 0
 	 , wndPos        := getSearchWndPos(neutron)
 	 , wndUID        := "ahk_id " neutron.UID()
 	 , int           := int
+	 , Ico   		 := A_ScriptDir "\Icon.ico"
 	 , MSC_Search    := []
 	 , vIni_Dir_Path := A_Dropbox "\AHK Scripts\_DMD Scripts\Hotstring Directory Paths\Directory Paths.ini"
 	 , oDir_Paths    := DMD_Ini2Obj(vIni_Dir_Path)
@@ -29,7 +29,6 @@ global wndToggle     := 0
 	 , oIcons        := oDir_Paths.Icon_Paths
 setMSCIcons(wndUID)
 Gui +LastFound +OwnDialogs +AlwaysOnTop ; keep MSC AlwaysOnTop
-; neutron.Show(wndPos)
 wndToggle := 1
 enableMSCHotkeys()
 t("Master Script Commands")
@@ -213,13 +212,15 @@ runIEChooser(neutron) { ; with F12 open debug options for neutron
 	WinSet, AlwaysOnTop, On, ahk_exe IEChooser.exe
 }
 setMSCIcons(wndUID) { ; Set Icon of Script in Taskbar & Tray Icon if Swal exists
+	global Ico
+	DetectHiddenWindows, On
 	If WinExist(wndUID) {
-		Ico   := A_LineFile "\..\Icon.ico"
 		Menu, Tray, Icon, % Ico, 1 ; Set Icon of Script in Taskbar
 		hIcon := DllCall( "LoadImage", UInt,0, Str,Ico, UInt,1, UInt,0, UInt,0, UInt,0x10 )
 		SendMessage, 0x80, 0, hIcon ,, % wndUID  ; Small Icon
 		SendMessage, 0x80, 1, hIcon ,, % wndUID  ; Big Icon
 	}
+	DetectHiddenWindows, Off
 }
 toggleMSC(neutron) {
 	global wndToggle
