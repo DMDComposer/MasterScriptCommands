@@ -93,7 +93,7 @@ getDB(neutron, event) {
 }
 getListOfCommands() {
 	oCommands := {}
-	Loop, Read, % A_Dropbox "\AHK Scripts\_DMD Scripts\Master Search Box\Includes\testCommands.ahk"
+	Loop, Read, % A_ScriptDir "\Includes\userCommands.ahk"
 	{
 		StringCaseSense, Off 
 		If SubStr(A_LoopReadLine, 1, 1) != ";" Continue ; Do not display commented commands
@@ -255,8 +255,7 @@ updateWndSize(neutron, ByRef wndW, ByRef wndH, ByRef mscInput) {
 
 ; NOTE: Have to use a goSub because their are functions within the Case statements. Otherwise errors out with nested functions
 setCommands:
-#Include Includes\testCommands.ahk
-; #Include Includes\UserCommands.ahk
+#Include Includes\userCommands.ahk
 return
 
 gui_search_add_elements:

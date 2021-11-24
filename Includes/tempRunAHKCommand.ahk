@@ -1,3 +1,3 @@
 #Include <Default_Settings>
-s(A_Screenwidth)
+t("testsing")
 ExitApp
