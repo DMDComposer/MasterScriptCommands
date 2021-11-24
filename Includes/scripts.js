@@ -44,6 +44,10 @@ $(document).keyup(function (event) {
     if ($("#mscSearchInput").length) {
       ahk.getMSCCommand($("#mscSearchInput").val())
     }
+
+    if ($("#mscRunAHKCommandInput").length) {
+      ahk.getMSCRunAHKCommand($("#mscRunAHKCommandInput").val())
+    }
   }
 
   // focus the resultsList when Down arrow is pressed
@@ -296,18 +300,21 @@ function resetHighlightedDiv(next) {
 function resetSearchAttributes() {
   if ($("#mscSearchInput").length) {
     $("#mscSearchInput").attr("id", "search")
-    // $(".mscIcon").css("background", 'url("./Icon.ico") no-repeat center center')
-    $(".mscIcon").attr("src", "./Icon.ico")
-    $(".mscTitle").text("Master Script Commands")
-    $(".mscTitle").css("color", "#fff")
-    $("#search").css({
-      color: "#fff",
-      "background-color": "#1d1f21",
-    })
-    $("#search:focus").css({
-      "border-color": "rgba(255, 0, 0, 0.6)",
-      "box-shadow":
-        "inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6)",
-    })
   }
+  if ($("#mscRunAHKCommandInput").length) {
+    $("#mscRunAHKCommandInput").attr("id", "search")
+  }
+  // $(".mscIcon").css("background", 'url("./Icon.ico") no-repeat center center')
+  $(".mscIcon").attr("src", "./Icon.ico")
+  $(".mscTitle").text("Master Script Commands")
+  $(".mscTitle").css("color", "#fff")
+  $("#search").css({
+    color: "#fff",
+    "background-color": "#1d1f21",
+  })
+  $("#search:focus").css({
+    "border-color": "rgba(255, 0, 0, 0.6)",
+    "box-shadow":
+      "inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6)",
+  })
 }

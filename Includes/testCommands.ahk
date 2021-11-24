@@ -25,11 +25,19 @@ DetectHiddenWindows, Off ; Ensure Window is off unless specificed by command. Im
 ; It does not have to be a search url, that was just the application I had in mind when I originally wrote it.
 ; So what this does is that it Runs chrome with the arguments "-incognito" and the google search URL where REPLACEME in the URL has been replaced by your input.	
 
+toggleApp(app, location) {
+	if WinExist(app)
+		(!WinActive(app) ? WinActivate : WinMinimize)
+	else if (location != "")
+		Run, % location
+}
+
 Switch MasterScriptCommands
 {
 	Case "aaa": { ; Testing area
 		; Notify().AddWindow("You've made it here", {Title:"Congrats!"})
-		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Title"})
+		; Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Title"})
+		runAHKCommand()
 		; t(oDirs.HasKey("drive"))
 		; mscSearch()
 		; t(MasterScriptCommands)
@@ -220,13 +228,13 @@ Switch MasterScriptCommands
 	Case "whats": { ; WhatsAPP
 		
 		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
-		Toggle_App("WhatsApp", "C:\Users\Dillon\AppData\Local\WhatsApp\WhatsApp.exe")
+		toggleApp("WhatsApp", "C:\Users\Dillon\AppData\Local\WhatsApp\WhatsApp.exe")
 	}
 	Case "calc": { ; Calculator
 		
 		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\Windows\System32\calc.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0x464646", Color:"0xFFFFFF", TitleColor:"0xFFFFFF"})
 		DetectHiddenWindows, Off ; Have to turn off for Calc to appear
-		Toggle_App("Calc", "C:\Windows\System32\calc.exe")
+		toggleApp("Calc", "C:\Windows\System32\calc.exe")
 	}
 	Case "encrypt": { ; Word Encryption
 		
@@ -255,10 +263,6 @@ Switch MasterScriptCommands
 		SendInput, {F21} ; Reload Script(s) Button	
 		DMD_ReloadScript("HS_Dir Paths")
 		Reload
-	}
-	Case "force rel": { ; Force Reload of MSC SCript
-		
-		Gosub, RunReload
 	}
 	Case "_", "master": { ; Reload Master Script
 		 ; removes the GUI even when the reload fails
@@ -332,17 +336,14 @@ Switch MasterScriptCommands
 		Run, % A_ProgramFiles64 "\Notepad++\notepad++.exe" A_Space chr(34) A_Dropbox "\AHK Scripts\_DMD Scripts\_Master Script\Resources\Icons.ini" chr(34)
 	}
 	Case "scripts": { ; Open Script Directory
-		
 		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_Run(A_Dropbox "\AHK Scripts")
 	}
 	Case "itunes": { ; Itunes
-		
 		Run, % A_ProgramFiles64 "\iTunes\iTunes.exe"
-		Command_Gui({Icon:"Itunes",Background:"#FFFFFF",Title:"iTunes",Color:"#000000"}) ; Title | Icon | Background | Color | SleepTimer | Gradient |
+		; Command_Gui({Icon:"Itunes",Background:"#FFFFFF",Title:"iTunes",Color:"#000000"}) ; Title | Icon | Background | Color | SleepTimer | Gradient |
 	}
 	Case "amt": { ; Automate My Task
-		
 		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		DMD_RunShortcut(A_Dropbox "\AHK Scripts\Tools\Automate My Task\Automate_my_Task.ahk")
 	}
@@ -413,14 +414,11 @@ Switch MasterScriptCommands
 		}	
 	}
 	Case "Sound": { ; Open Sound Control Panel
-		
 		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"c:\windows\system32\control.exe, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
 		Run, % A_WinDir "\system32\rundll32.exe" " Shell32.dll,Control_RunDLL mmsys.cpl",,, PID
 		vWindow := "ahk_pid " PID
 		while(!WinActive(vWindow))
 			WinActivate, % vWindow
-		if WinActive(vWindow)
-			MoveWindowtoCenter()
 	}
 	Case "mixer": { ; Open Volume Mixer
 		
@@ -432,10 +430,6 @@ Switch MasterScriptCommands
 		Notify().AddWindow("Empty RecycleBin", {Title:"Master Script Commands", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"D:\Folder Icons\WIndows 10 Icons\imageres_54.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x0489D8", TitleColor:"0x0489D8"})
 		; A_WinDir "\System32\\imageres.dll,50"
 		FileRecycleEmpty
-	}
-	Case "twitch": { ; Mute/Unmute Twitch Stream
-		
-		Focus_Send({Window:"Twitch Stream - VLC media player ahk_class Qt5QWindowIcon",Title:"Mute/Unmute Twitch Stream",Keys:"m",Focus:"1",Icon:"Twitch",Background:"#5A3E85"}) ; Focus_Send({}) ; Window | Title | Keys | Background | Color | TitleMatchMode | Focus | Icon | Gradient
 	}
 	Case "y2mp3": { ; Youtube to Mp3
 		
@@ -459,8 +453,36 @@ Switch MasterScriptCommands
 		Run, "D:\Users\Dillon\Downloads\Youtube Downloader"
 	}
 	Case "pastebin", "share code": { ; Share AHK Code
-		
-		Clipboard:=AHKPastebin(Clipboard,"Dillon",1,1) ; 1 will run it in your default browser, 0 doesn't
+		Clipboard := AHKPastebin(Clipboard,"Dillon",1,1) ; 1 will run it in your default browser, 0 doesn't
+		AHKPastebin(Content,Name:="",Notify:=1,Run:=0){
+			HTTP:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+			HTTP.Open("POST","https://p.ahkscript.org/", False)
+			HTTP.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+			HTTP.Send("code=" UriEncode(Content) "&name=" UriEncode(Name) "&channel=#ahkscript")
+			if HTTP.Status()!=200{ ;~ If not okay
+				MsgBox Something went wrong
+				Return
+			}
+			If (Notify)
+				Notify().AddWindow(Content,{Time:3000,Icon:300,Background:"0x1100AA",Icon:14,Title:"Added to pastebin at: " HTTP.Option(1),TitleSize:18,size:14,TitleColor:"0xFF0000"})
+			If (Run)
+				Run % HTTP.Option(1) ;~ URL
+			Return HTTP.Option(1) ;~ Return URL
+		}
+		; A function to escape characters like & for use in URLs.
+		uriEncode(str) {
+			f = %A_FormatInteger%
+			SetFormat, Integer, Hex
+			If RegExMatch(str, "^\w+:/{0,2}", pr)
+				StringTrimLeft, str, str, StrLen(pr)
+			StringReplace, str, str, `%, `%25, All
+			Loop
+				If RegExMatch(str, "i)[^\w\.~%/:]", char)
+					StringReplace, str, str, %char%, % "%" . SubStr(Asc(char),3), All
+			Else Break
+				SetFormat, Integer, %f%
+			Return, pr . str
+		}
 	}
 	Case "ip. ", "myip": { ; Grab my ip
 		
@@ -493,7 +515,7 @@ Switch MasterScriptCommands
 	Case "port": { ; Change Port for qBittorent
 		
 		Random,port,40000,70000
-		Toggle_App(qBittorent, "C:\Program Files (x86)\qBittorrent\qbittorrent.exe")
+		toggleApp(qBittorent, "C:\Program Files (x86)\qBittorrent\qbittorrent.exe")
 		while(!WinActive("qBittorrent")){
 			WinActivate, "qBittorrent"
 			Sleep, 100
@@ -549,11 +571,11 @@ Switch MasterScriptCommands
 	}
 	Case "notion": { ; Toggle Notion App
 		
-		Toggle_App("Notion", "C:\Users\Dillon\AppData\Local\Programs\Notion\Notion.exe")
+		toggleApp("Notion", "C:\Users\Dillon\AppData\Local\Programs\Notion\Notion.exe")
 	}
 	Case "evernote": { ; Toggle Evernote App
 		
-		Toggle_App("Evernote", "D:\Program Files (x86)\Evernote\Evernote\Evernote.exe")
+		toggleApp("Evernote", "D:\Program Files (x86)\Evernote\Evernote\Evernote.exe")
 	}
 	Case "166": { ; Open JXL Project 166
 		
@@ -561,7 +583,7 @@ Switch MasterScriptCommands
 		/*
 			If WinExist("ahk_exe Notion.exe"){
 				SetKeyDelay, 0.75
-				Toggle_App(Notion, "C:\Users\Dillon\AppData\Local\Programs\Notion\Notion.exe")
+				toggleApp(Notion, "C:\Users\Dillon\AppData\Local\Programs\Notion\Notion.exe")
 				WinWaitActive, ahk_exe Notion.exe
 				SendInput, ^p
 				Sleep, 25
@@ -577,12 +599,12 @@ Switch MasterScriptCommands
 	}
 	Case "action": { ; Action Zone
 		
-		Toggle_App("Action Zone", "C:\Users\Dillon\AppData\Local\Programs\Notion\Notion.exe")
+		toggleApp("Action Zone", "C:\Users\Dillon\AppData\Local\Programs\Notion\Notion.exe")
 	}
 	Case "task": { ; AHK Task Manager
 		
 		Run, "C:\AHK Scripts\Tools\Task Manager\TaskManager.ahk"
-		; Toggle_App("Task Manager", "C:\AHK Scripts\Tools\Task Manager\TaskManager.ahk")
+		; toggleApp("Task Manager", "C:\AHK Scripts\Tools\Task Manager\TaskManager.ahk")
 	}
 	Case "reset audio", "reset sound": { ; Enable/Disable Default Audio Device
 		
@@ -876,7 +898,7 @@ Switch MasterScriptCommands
 	}
 	Case "remove extra spaces": { ; Remove Double or More Spaces from String on Clipboard
 		
-		Clipboard:=RemoveExtraSpaces(Clipboard)
+		Clipboard := Trim(RegExReplace(Clipboard, "\h\K\h+"))
 		Notify().AddWindow("On the Clipboard!", {Title:"Removed Extra Spaces from Clipboard", Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})	
 	}
 	Case "snip", "windows snip": { ; Run Joe's Window Snip Program
@@ -1209,6 +1231,25 @@ Switch MasterScriptCommands
 		url 		:= apiTiny . EncodeDecodeURI(Clipboard)
 		Clipboard := HttpQuery(url)
 		Notify().AddWindow("Clipboard:= "HttpQuery(url), {Title:getMSCTitle(MasterScriptCommands, DIR), Font:"Sans Serif", TitleFont:"Sans Serif", Icon:"C:\AHK Scripts\_Master Script\Resources\Master If Commands Icons\Cogwheel Settings.ico, 1", Animate:"Right, Slide", ShowDelay:100, IconSize:64, TitleSize:14, Size:20, Radius:26, Time:2500, Background:"0xFFFFFF", Color:"0x282A2E", TitleColor:"0xFF0000"})
+		HttpQuery(url) {
+			whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+			whr.Open("GET", url, true)
+			whr.Send()
+			whr.WaitForResponse()
+			status := whr.status
+			if (status != 200)
+				throw "HttpQuery error, status: " . status
+			return whr.ResponseText
+		}
+		EncodeDecodeURI(str, encode := true, component := true) {
+			static Doc, JS
+			if !Doc {
+				Doc := ComObjCreate("htmlfile")
+				Doc.write("<meta http-equiv=""X-UA-Compatible"" content=""IE=9"">")
+				JS := Doc.parentWindow
+			}
+			Return JS[ (encode ? "en" : "de") . "codeURI" . (component ? "Component" : "") ](str)
+		}
 	}
 	Case "doge": { ; Run DodgeCoin Stocks Fav Windows/Tabs
 		
