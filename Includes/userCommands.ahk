@@ -12,7 +12,8 @@ global vIni_Dir_Path := A_Dropbox "\AHK Scripts\_DMD Scripts\Hotstring Directory
 		   	  	 		,"A_UserProfile":A_UserProfile
 		   	  	 		,"A_WinDir":A_WinDir} 
 
-/* for key,value in A_Variables { ; Creating a unqiue variable for each key in the object
+/* 
+for key,value in A_Variables { ; Creating a unqiue variable for each key in the object
 	%key% := oOptions[key]
 } 
 */

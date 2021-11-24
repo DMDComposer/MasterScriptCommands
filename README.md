@@ -1,7 +1,7 @@
 # MasterScriptCommands
 
 A gui command box styled using G33kdude's Neutron Class  
-![](images/ex_MSC_02.gif)  
+!["Opening MSC"](images/ex_MSC_02.gif)  
 This is v1, modified & forked originally from [plul's AutoHotkey Launcher ](https://github.com/plul/Public-AutoHotKey-Scripts).
 
 ## What's changed from v1 aka Master Search Box?
@@ -20,5 +20,3 @@ This is v1, modified & forked originally from [plul's AutoHotkey Launcher ](http
 
 - may encounter at start of script a JS error
   - _I believe it could just be the IE window being created sometimes has a error, but it doesn't effect the script currently from my tests_
-
-## Master Search Box v2 aka Master Script Commands
