@@ -289,11 +289,15 @@ runAHKCommand() {
 
 getMSCRunAHKCommand(neutron,command) {
 	toggleMSC(neutron)
-	tmpScriptDir := A_ScriptDir "\Includes\tempRunAHKCommand.ahk"
+	static tmpScriptDir := A_ScriptDir "\Includes\tempRunAHKCommand.ahk"
+		 , header := "#Include <Default_Settings>`n"
+		 , footer := "`nExitApp"
 	while (FileExist(tmpScriptDir))
 		FileDelete, % tmpScriptDir
-	FileAppend, % command, % tmpScriptDir
+	FileAppend, % header . command . footer, % tmpScriptDir
 	while (!FileExist(tmpScriptDir))
 		Sleep, 10
-	Run % tmpScriptDir,,PID
+	Run % tmpScriptDir,,UseErrorLevel,PID
+	if ErrorLevel
+		t(A_LastError)
 }

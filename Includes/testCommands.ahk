@@ -37,7 +37,6 @@ Switch MasterScriptCommands
 	Case "aaa": { ; Testing area
 		; Notify().AddWindow("You've made it here", {Title:"Congrats!"})
 		; Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Title"})
-		runAHKCommand()
 		; t(oDirs.HasKey("drive"))
 		; mscSearch()
 		; t(MasterScriptCommands)
@@ -83,12 +82,17 @@ Switch MasterScriptCommands
 		Run, % HS_Dir
 		DetectHiddenWindows, Off
 	}
+	Case "ahk ": { ; Open Simple AHK Command Input
+		runAHKCommand()
+	}
+	/* 
 	Case "ahk ": { ; Search for AHK Related Info
 		mscSearch({title:"Autohotkey Google Search",color:"#00FF00",icon:"./Icons/AHK.ico"})
 		mscSearchUrls("https://www.google.com/search?num=50&safe=off&site=&source=hp&q=autohotkey%20REPLACEME&btnG=Search&oq=&gs_l=")
 		mscSearchUrls("https://www.google.com/search?client=firefox-b-1-d&channel=cus2&sxsrf=ALeKk0356faDBEtpcEjEwIwMscFvTxXMmg%3A1590206661049&ei=xaDIXsXJAq6vytMPh5ChgAU&q=site%3Astackoverflow.com+REPLACEME&oq=site%3Astackoverflow.com+REPLACEME&gs_lcp=CgZwc3ktYWIQA1DwR1iDZGCnZ2gAcAB4AIABhgGIAcQHkgEEMTAuMpgBAKABAqABAaoBB2d3cy13aXo&sclient=psy-ab&ved=0ahUKEwiFwJq5jcnpAhWul3IEHQdICFAQ4dUDCAs&uact=5")
 		; mscSearchUrls("https://www.google.com/search?client=firefox-b-1-d&channel=cus2&sxsrf=ALeKk02CuZqxN5n_fDw_33Asi02z9bthxw%3A1590206200889&ei=-J7IXuruNd6tytMP1b6sgAc&q=site%3Awww.autohotkey.com%2Fboards%2F+REPLACEME&oq=site%3Awww.autohotkey.com%2Fboards%2F+REPLACEME&gs_lcp=CgZwc3ktYWIQAzoECAAQR1CViwlYpK8JYJuyCWgIcAF4AIABTYgBiAqSAQIxOZgBAKABAaoBB2d3cy13aXo&sclient=psy-ab&ved=0ahUKEwjqyuTdi8npAhXelnIEHVUfC3AQ4dUDCAs&uact=5")
-	}
+	} 
+	*/
 	Case (oDirs.HasKey(MasterScriptCommands) ? MasterScriptCommands : false), (oDirs.HasKey("dir " MasterScriptCommands) ? MasterScriptCommands : false): { ; Add Icon Path to ini File
 		for Key,Value in oDirs {
 			if (Key ~= "i)^" MasterScriptCommands "|dir\s" MasterScriptCommands) {

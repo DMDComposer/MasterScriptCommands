@@ -1,1 +1,3 @@
-msgbox % "testing this msgbox"
+#Include <Default_Settings>
+s(A_Screenwidth)
+ExitApp
