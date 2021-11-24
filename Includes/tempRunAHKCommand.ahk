@@ -1,3 +1,3 @@
 #Include <Default_Settings>
-t("testsing")
+msgbox % "hey this is a tmp script from MSC"
 ExitApp

@@ -8,8 +8,6 @@ if (! A_IsAdmin){ ;http://ahkscript.org/docs/Variables.htm#IsAdmin
 	ExitApp
 }
 
-; NOTE: If/Else > 5, than Switch statement has greater performnace. 
-; TODO: Add Quick AHK Commands Engine
 ; TODO: ResetMSC needs to recenter GUI Spawn if user moved it
 ; TODO: Highlight Arrow Keys, Scrollbar Needs to Follow to bottom of list
 
