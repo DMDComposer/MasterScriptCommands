@@ -1,0 +1,8 @@
+node_modules
+_Archive
+.vs
+.vscode
+UserCommand Run Scripts
+desktop.ini
+Master Search Box.ahk
+/includes/userCommands.ahk
