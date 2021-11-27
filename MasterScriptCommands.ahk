@@ -9,7 +9,7 @@ if (! A_IsAdmin){ ;http://ahkscript.org/docs/Variables.htm#IsAdmin
 }
 
 ; TODO: ResetMSC needs to recenter GUI Spawn if user moved it
-; TODO: Highlight Arrow Keys, Scrollbar Needs to Follow to bottom of list
+; TODO: Fix PrevHighlightDiv with scrollTo Jquery
 ; Create a new NeutronWindow and navigate to our HTML page
 oFinalCommandsList := getListOfCommands()
 ; NOTE: Create neutron window & attributes
@@ -18,8 +18,8 @@ neutron.Load("index.html")
 neutron.wnd.onReady(event)             ; Prepping intellisense, getDB()
 neutron.Gui("+LabelMSCNeutronGui")
 global wndToggle     := 0
-	 , wndPos        := getSearchWndPos(neutron)
 	 , wndUID        := "ahk_id " neutron.UID()
+	 , wndPos        := getSearchWndPos(neutron)
 	 , int           := int
 	 , Ico   		 := A_ScriptDir "\Icon.ico"
 	 , MSC_Search    := []
@@ -39,6 +39,12 @@ RAlt::
 toggleMSC(neutron)
 return
 
+getWndDefaultPos(neutron, wndUID) {
+	DetectHiddenWindows, On
+	WinGetPos, x, y, w, h, % wndUID
+	DetectHiddenWindows, Off
+	return {x:x,y:y,w:w,h:h}
+}
 getMSCCommand(neutron, event) {
 	; s(event)
 	global gui_SearchEdit := event
@@ -57,6 +63,7 @@ getCommand(neutron, ByRef event) {
 	; need to create list from MSC
 	global oFinalCommandsList
 		 , MasterScriptCommands
+		 , wndUID
 	oCommandsList := []
 	for key,value in oFinalCommandsList {
 		oCommandsList.push(value.command)
@@ -64,7 +71,7 @@ getCommand(neutron, ByRef event) {
 	for key,value in oCommandsList {
 		if (event = value || oDir_PathsTrue(event)) {
 			MasterScriptCommands := event
-			resetMSCWnd(neutron)
+			resetMSCWnd(neutron, getWndDefaultPos(neutron, wndUID))
 			Gosub, setCommands
 
 			; need to reset event otherwise infinite loop with oDirs_PathsTrue()
@@ -125,7 +132,7 @@ getListOfCommands() {
 	}
 	return oFinalCommandsList
 }
-getMSCTitle(MasterScriptCommands, Dir){
+getMSCTitle(MasterScriptCommands, Dir) {
 	global oFinalCommandsList
 	for key,value in oFinalCommandsList {
 		if (value.command = MasterScriptCommands) {
@@ -133,7 +140,7 @@ getMSCTitle(MasterScriptCommands, Dir){
 		}
 	}
 }
-getSearchWndPos(neutron){
+getSearchWndPos(neutron) {
 	vW := neutron.wnd.eval("$('.search').width()")
 	vH := neutron.wnd.eval("$('.search').height()")
 	; vPos := "w" vW " h" vH " x" vX " y" vY
@@ -142,17 +149,19 @@ getSearchWndPos(neutron){
 }
 highlightNextDiv() {
 	global int, neutron 
-	(int <i 0 ? 0 : int)
+	(int < i 0 ? 0 : int)
 	int++
 	; Notify().AddWindow(A_ThisHotkey, {Title: int-1 })
-	neutron.wnd.Eval("highlightNextDiv(" int-1 ")")
+	if (neutron.wnd.Eval("$('#search').val()") != "")
+		neutron.wnd.Eval("highlightNextDiv(" int-1 ")")
 }
 highlightPrevDiv() {
 	global int, neutron
 	(int <i 0 ? 0 : int)
 	int--
 	; Notify().AddWindow(A_ThisHotkey, {Title: int })
-	neutron.wnd.Eval("highlightPrevDiv(" int ")")
+	if (neutron.wnd.Eval("$('#search').val()") != "")
+		neutron.wnd.Eval("highlightPrevDiv(" int ")")
 }
 mscEscapeKey(neutron) {
 	neutron.Destroy()
@@ -196,8 +205,13 @@ oDir_PathsTrue(event) {
 	global oDirs
 	return (oDirs.HasKey(event) || oDirs.HasKey("dir " MasterScriptCommands) ? true : false)
 }
-resetMSCWnd(neutron) {
-	global int
+resetMSCWnd(neutron, ByRef wndDefPos) {
+	global int, wndUID
+	DetectHiddenWindows, On
+	WinGetPos, x, y, w, h, % wndUID
+	if (x != wndDefPos.x)
+		WinMove, % wndUID,, % wndDefPos.x, % wndDefPos.y, % wndDefPos.w, % wndDefPos.h
+	DetectHiddenWindows, Off
 	if (int >= 0)
 		neutron.wnd.Eval("resetHighlightedDiv(" int ")")
 	neutron.wnd.Eval("resetSearchAttributes()")
@@ -226,12 +240,14 @@ toggleMSC(neutron) {
 	global wndToggle
 		 , wndPos
 		 , wndUID
+	static wndDefPos := wndDefPos
 	DetectHiddenWindows, Off
 	wndToggle := (WinExist(wndUID) ? 1 : 0)
 	Switch wndToggle
 	{
 		Case 0: {
 			neutron.Show(wndPos)
+			wndDefPos := getWndDefaultPos(neutron, wndUID)
 			neutron.wnd.Eval("$('#search').focus()")
 			; neutron.wnd.Eval("$('.mscIcon').playKeyframe('12s linear infinite')") ; not supported with Legacy JS
 			neutron.wnd.Eval("$('.mscIcon').css({'animation-delay': '4s;','animation':'mscIconSpin 12s linear infinite;'})")
@@ -239,7 +255,7 @@ toggleMSC(neutron) {
 			; WinGetPos, x,y,w,h, % wndUID
 		}
 		Case 1: {
-			resetMSCWnd(neutron)
+			resetMSCWnd(neutron, wndDefPos)
 			; neutron.wnd.Eval("$('.mscIcon').pauseKeyframe()") ; not supported with Legacy JS
 			wndToggle := 0
 		}
@@ -298,4 +314,8 @@ getMSCRunAHKCommand(neutron,command) {
 	Run % tmpScriptDir,,UseErrorLevel,PID
 	if ErrorLevel
 		t(A_LastError)
+}
+
+xxyy(neutron,event) {
+	Notify().AddWindow(event, {Title:"Title"})
 }

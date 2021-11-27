@@ -49,21 +49,6 @@ $(document).keyup(function (event) {
       ahk.getMSCRunAHKCommand($("#mscRunAHKCommandInput").val())
     }
   }
-
-  // focus the resultsList when Down arrow is pressed
-  /* if (event.keyCode == 40) {
-    $("#resultsList").focus()
-  } */
-
-  /* // Enable Enter Key for MsgPopup, currently only need keyup not keydown+keyup
-  // Ctrl+C will click Clipboard button (or denied button)
-  if (event.keyCode == 67 && event.ctrlKey) {
-    Swal.clickDeny()
-  }
-  // Ctrl+X will ExitApp
-  if (event.keyCode == 88 && event.ctrlKey) {
-    Swal.clickCancel()
-  } */
   // Esc key will close neutron instead of closing MSC
   if (event.keyCode == 27) {
     // ahk.mscEscapeKey()
@@ -237,6 +222,7 @@ const setHighlightCSS = {
   },
   removeHighlightCSS = { background: "", transform: "", transition: "" }
 
+let scrollInt = 8
 function highlightNextDiv(next) {
   const prev = next - 1
   $(".resultsFiltered")
@@ -258,6 +244,12 @@ function highlightNextDiv(next) {
     .eq(prev)
     .children("#divResultsCommand")
     .removeClass("resultSelected")
+
+  // to auto scroll when highligh is past the preview of the GUI
+  if (next >= scrollInt) {
+    $(".results").scrollTo(".resultSelected")
+    scrollInt += 8
+  }
   return next
 }
 
@@ -282,6 +274,12 @@ function highlightPrevDiv(next) {
     .eq(next)
     .children("#divResultsCommand")
     .removeClass("resultSelected")
+
+  // to auto scroll when highligh is past the preview of the GUI
+  if (next >= scrollInt) {
+    $(".results").scrollTo(".resultSelected")
+    scrollInt -= 8
+  }
   return prev
 }
 
