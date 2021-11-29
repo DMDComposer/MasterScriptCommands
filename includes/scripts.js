@@ -222,7 +222,9 @@ const setHighlightCSS = {
   },
   removeHighlightCSS = { background: "", transform: "", transition: "" }
 
-let scrollInt = 8
+let scrollIntDefault = 12
+let scrollInt = scrollIntDefault
+
 function highlightNextDiv(next) {
   const prev = next - 1
   $(".resultsFiltered")
@@ -248,13 +250,20 @@ function highlightNextDiv(next) {
   // to auto scroll when highligh is past the preview of the GUI
   if (next >= scrollInt) {
     $(".results").scrollTo(".resultSelected")
-    scrollInt += 8
+    scrollInt += scrollIntDefault
   }
   return next
 }
 
 function highlightPrevDiv(next) {
   const prev = next - 1
+
+  // to auto scroll when highligh is past the preview of the GUI
+  if (prev == scrollInt - scrollIntDefault - 1 && prev > 6) {
+    $(".results").scrollTo($(".resultsFiltered").eq(prev - 11))
+    scrollInt -= scrollIntDefault
+  }
+
   $(".resultsFiltered")
     .eq(prev)
     .children("#divResultsCommand")
@@ -274,12 +283,6 @@ function highlightPrevDiv(next) {
     .eq(next)
     .children("#divResultsCommand")
     .removeClass("resultSelected")
-
-  // to auto scroll when highligh is past the preview of the GUI
-  if (next >= scrollInt) {
-    $(".results").scrollTo(".resultSelected")
-    scrollInt -= 8
-  }
   return prev
 }
 
@@ -293,6 +296,7 @@ function resetHighlightedDiv(next) {
     .eq(next)
     .children("#divResultsCommand")
     .removeClass("resultSelected")
+  scrollInt = scrollIntDefault
 }
 
 function resetSearchAttributes() {

@@ -9,7 +9,6 @@ if (! A_IsAdmin){ ;http://ahkscript.org/docs/Variables.htm#IsAdmin
 }
 
 ; TODO: ResetMSC needs to recenter GUI Spawn if user moved it
-; TODO: Fix PrevHighlightDiv with scrollTo Jquery
 ; Create a new NeutronWindow and navigate to our HTML page
 oFinalCommandsList := getListOfCommands()
 ; NOTE: Create neutron window & attributes
@@ -49,7 +48,8 @@ getMSCCommand(neutron, event) {
 	; s(event)
 	global gui_SearchEdit := event
 	toggleMSC(neutron)
-	Gosub, gui_search_add_elements
+	; Gosub, gui_search_add_elements
+	mscAddElements()
 }
 enableMSCHotkeys() {
 	Hotkey, IfWinActive, % wndUID
@@ -140,6 +140,9 @@ getMSCTitle(MasterScriptCommands, Dir) {
 		}
 	}
 }
+getScrollIntDefault(neutron) {
+	return (A_ScreenDPI > 96 ? 8 : 12)
+}
 getSearchWndPos(neutron) {
 	vW := neutron.wnd.eval("$('.search').width()")
 	vH := neutron.wnd.eval("$('.search').height()")
@@ -199,6 +202,12 @@ mscSearch(oOptions*) {
 }
 mscSearchUrls(url) {
 	global MSC_Search
+	if (IsObject(url)) {
+		for key,value in url {
+			MSC_Search.Push(value)
+		}
+		return
+	}
 	MSC_Search.Push(url)
 }
 oDir_PathsTrue(event) {
@@ -267,23 +276,6 @@ updateWndSize(neutron, ByRef wndW, ByRef wndH, ByRef mscInput) {
 	; Swal.toast(wndH,{title:mscInput})
 	neutron.Show("h" wndH+10)
 }
-
-; NOTE: Have to use a goSub because their are functions within the Case statements. Otherwise errors out with nested functions
-setCommands:
-#Include Includes\userCommands.ahk
-return
-
-gui_search_add_elements:
-for key, value in MSC_Search {
-	vURL := StrReplace(value, "REPLACEME", uriEncode(gui_SearchEdit))
-	DMD_Run(vURL)
-	Search_Title := RegExReplace(value, "s).*?(\d{12}).*?(?=\d{12}|$)", "$1`r`n")
-	If (Title = "" ? Title := Search_Title : Title := Title)	
-		t("<i style='font-size:0.75rem'>" vURL "</i>",{title:gui_SearchEdit,time:3000,stack:1}) 
-}
-MSC_Search := [] ; reset for adding search urls into MSC_Search
-return
-
 runAHKCommand() {
 	global neutron
 	
@@ -300,7 +292,6 @@ runAHKCommand() {
 	neutron.wnd.Eval("$('#mscRunAHKCommandInput').focus()")
 	return
 }
-
 getMSCRunAHKCommand(neutron,command) {
 	toggleMSC(neutron)
 	static tmpScriptDir := A_ScriptDir "\Includes\tempRunAHKCommand.ahk"
@@ -315,6 +306,33 @@ getMSCRunAHKCommand(neutron,command) {
 	if ErrorLevel
 		t(A_LastError)
 }
+mscAddElements() {
+	for key, value in MSC_Search {
+		vURL := StrReplace(value, "REPLACEME", uriEncode(gui_SearchEdit))
+		DMD_Run(vURL)
+		Search_Title := RegExReplace(value, "s).*?(\d{12}).*?(?=\d{12}|$)", "$1`r`n")
+		If (Title = "" ? Title := Search_Title : Title := Title)	
+			t("<i style='font-size:0.75rem'>" vURL "</i>",{title:gui_SearchEdit,time:3000,stack:1}) 
+	}
+	MSC_Search := [] ; reset for adding search urls into MSC_Search
+}
+/* 
+gui_search_add_elements:
+for key, value in MSC_Search {
+	vURL := StrReplace(value, "REPLACEME", uriEncode(gui_SearchEdit))
+	DMD_Run(vURL)
+	Search_Title := RegExReplace(value, "s).*?(\d{12}).*?(?=\d{12}|$)", "$1`r`n")
+	If (Title = "" ? Title := Search_Title : Title := Title)	
+		t("<i style='font-size:0.75rem'>" vURL "</i>",{title:gui_SearchEdit,time:3000,stack:1}) 
+}
+MSC_Search := [] ; reset for adding search urls into MSC_Search
+return 
+*/
+
+; NOTE: Have to use a goSub because their are functions within the Case statements. Otherwise errors out with nested functions
+setCommands:
+#Include Includes\userCommands.ahk
+return
 
 xxyy(neutron,event) {
 	Notify().AddWindow(event, {Title:"Title"})
