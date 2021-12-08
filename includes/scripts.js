@@ -247,6 +247,7 @@ function highlightNextDiv(next) {
     .children("#divResultsCommand")
     .removeClass("resultSelected")
 
+  ahk.xxyy(next)
   // to auto scroll when highligh is past the preview of the GUI
   if (next >= scrollInt) {
     $(".results").scrollTo(".resultSelected")
@@ -257,7 +258,7 @@ function highlightNextDiv(next) {
 
 function highlightPrevDiv(next) {
   const prev = next - 1
-
+  ahk.xxyy(prev)
   // to auto scroll when highligh is past the preview of the GUI
   if (prev == scrollInt - scrollIntDefault - 1 && prev > 6) {
     $(".results").scrollTo($(".resultsFiltered").eq(prev - 11))
@@ -307,7 +308,7 @@ function resetSearchAttributes() {
     $("#mscRunAHKCommandInput").attr("id", "search")
   }
   // $(".mscIcon").css("background", 'url("./Icon.ico") no-repeat center center')
-  $(".mscIcon").attr("src", "./Icon.ico")
+  $(".mscIcon").attr("src", "../Icon.ico")
   $(".mscTitle").text("Master Script Commands")
   $(".mscTitle").css("color", "#fff")
   $("#search").css({
