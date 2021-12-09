@@ -17,7 +17,7 @@ class mscSearchEngine extends MasterScriptCommands {
     		}
     	}
     	; neutron.wnd.Eval("$('.mscIcon').css('background','url(""" searchParams.icon """) no-repeat center center')")
-    	neutron.wnd.Eval("$('.mscIcon').attr('src','" escapeBackSlash(searchParams.icon) "')")
+    	neutron.wnd.Eval("$('.mscIcon').attr('src','" mscUtilities.escapeBackSlash(searchParams.icon) "')")
     	neutron.wnd.Eval("$('.mscTitle').text('" searchParams.title "')")
     	neutron.wnd.Eval("$('.mscTitle').css('color', '" searchParams.color "')")
     	neutron.wnd.Eval("$('#search:focus').css({'border-color': '" searchParams.color "', 'box-shadow': 'inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px " searchParams.color "'})")

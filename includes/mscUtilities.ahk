@@ -11,4 +11,13 @@ class mscUtilities extends MasterScriptCommands {
                     WinRestore, % "ahk_pid " wndPID 
         */
     }
+    toggleApp(app, location) {
+    	if WinExist(app)
+    		(!WinActive(app) ? WinActivate : WinMinimize)
+    	if (location != "")
+    		Run, % location
+    }
+    escapeBackSlash(string){
+    	return RegExReplace(string, "\\", "\\$1")
+    }
 }

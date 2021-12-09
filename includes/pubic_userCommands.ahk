@@ -11,4 +11,9 @@ Switch MasterScriptCommands
 	Case "test A": { ; Testing area
 		Notify().AddWindow(getMSCTitle(MasterScriptCommands, DIR), {Title:"Title"})
 	}
+	Case "test B": { ; Testing Search
+		mscSearchEngine.mscSearch()
+		mscSearchEngine.mscSearchUrls(["https://www.google.com/search?num=50&safe=off&site=&source=hp&q=REPLACEME&btnG=Search&oq=&gs_l="
+									  ,"www.yahoo.com"])
+	}
 }

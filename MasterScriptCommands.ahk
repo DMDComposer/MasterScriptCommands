@@ -57,9 +57,6 @@ enableMSCHotkeys() {
 	Hotkey, Down, highlightNextDiv
 	Hotkey, Up, highlightPrevDiv
 }
-escapeBackSlash(string){
-	return RegExReplace(string, "\\", "\\$1")
-}
 getCommand(neutron, ByRef event) {
 	; need to create list from MSC
 	global oFinalCommandsList
@@ -240,7 +237,7 @@ updateWndSize(neutron, ByRef wndW, ByRef wndH, ByRef mscInput) {
 runAHKCommand() {
 	global neutron
 	
-	neutron.wnd.Eval("$('.mscIcon').attr('src','" escapeBackSlash("./Icons/AHK.ico") "')")
+	neutron.wnd.Eval("$('.mscIcon').attr('src','" mscUtilities.escapeBackSlash("./Icons/AHK.ico") "')")
 	neutron.wnd.Eval("$('.mscTitle').text('AHK Custom Command')")
 	neutron.wnd.Eval("$('.mscTitle').css('color', '#00FF00')")
 	neutron.wnd.Eval("$('#search:focus').css({'border-color': '#00FF00', 'box-shadow': 'inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #00FF00'})")
