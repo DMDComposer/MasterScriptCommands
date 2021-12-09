@@ -1,7 +1,9 @@
 #Include <Default_Settings>
 #Include <Neutron>
 #Include <cJson>
-
+#Include includes\mscUtilities.ahk
+#Include includes\mscSearchEngine.ahk
+#Include includes\mscRunAHKCommand.ahk
 ; NOTE: Must run on admin to enable MSC toggle on all windows
 if (!A_IsAdmin) { ;http://ahkscript.org/docs/Variables.htm#IsAdmin
 	Run *RunAs "%A_ScriptFullPath%"  ; Requires v1.0.92.01+
@@ -11,13 +13,10 @@ if (!A_IsAdmin) { ;http://ahkscript.org/docs/Variables.htm#IsAdmin
 class MasterScriptCommands {
 
 }
-#Include, includes\mscUtilities.ahk
 msc := new MasterScriptCommands()
-mscUtilities := new mscUtilities()
 ; TODO: ResetMSC needs to recenter GUI Spawn if user moved it
 ; Create a new NeutronWindow and navigate to our HTML page
 oFinalCommandsList := getListOfCommands()
-; NOTE: Create neutron window & attributes
 neutron := new NeutronWindow()
 neutron.Load("includes/index.html")
 neutron.wnd.onReady(event)             ; Prepping intellisense, gather list of commands aka getDB()
@@ -49,12 +48,9 @@ getWndDefaultPos(neutron, wndUID) {
 	DetectHiddenWindows, Off
 	return {x:x,y:y,w:w,h:h}
 }
-getMSCCommand(neutron, event) {
-	; s(event)
-	global gui_SearchEdit := event
+setMSCSearchParam(neutron, event) {
 	toggleMSC(neutron)
-	; Gosub, gui_search_add_elements
-	mscAddElements()
+	mscSearchEngine.mscAddElements(event)
 }
 enableMSCHotkeys() {
 	Hotkey, IfWinActive, % wndUID
@@ -175,46 +171,6 @@ mscEscapeKey(neutron) {
 	neutron.Destroy()
 	ExitApp
 }
-mscSearch(oOptions*) {
-	; Title,Subtitle := "What would you like to search?",Color := "",Icon := ""
-	global neutron
-	static oKeys := ["title","subTitle","icon","color","background"]
-	      ,searchParams := {title:"Custom Search"
-						   ,subTitle:"What would you like to search?"
-						   ,icon:"./Icons/AHK.ico"
-						   ,color:"#00FF00"
-						   ,background:"#00FF00"}
-	
-	for key,value in oOptions.1 {
-		Loop, % oKeys.Length() {
-			if (key = oKeys[A_Index])
-				searchParams[oKeys[A_Index]] := value
-		}
-	}
-	; neutron.wnd.Eval("$('.mscIcon').css('background','url(""" searchParams.icon """) no-repeat center center')")
-	neutron.wnd.Eval("$('.mscIcon').attr('src','" escapeBackSlash(searchParams.icon) "')")
-	neutron.wnd.Eval("$('.mscTitle').text('" searchParams.title "')")
-	neutron.wnd.Eval("$('.mscTitle').css('color', '" searchParams.color "')")
-	neutron.wnd.Eval("$('#search:focus').css({'border-color': '" searchParams.color "', 'box-shadow': 'inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px " searchParams.color "'})")
-	
-	; change ID of search to enable search functions
-	neutron.wnd.Eval("$('#search').attr('id','mscSearchInput')")
-	; Show Newly Changed Window
-	toggleMSC(neutron)
-	; Focus new Search Edit Field
-	neutron.wnd.Eval("$('#mscSearchInput').focus()")
-	return
-}
-mscSearchUrls(url) {
-	global MSC_Search
-	if (IsObject(url)) {
-		for key,value in url {
-			MSC_Search.Push(value)
-		}
-		return
-	}
-	MSC_Search.Push(url)
-}
 oDir_PathsTrue(event) {
 	global oDirs
 	return (oDirs.HasKey(event) || oDirs.HasKey("dir " MasterScriptCommands) ? true : false)
@@ -297,67 +253,44 @@ runAHKCommand() {
 	neutron.wnd.Eval("$('#mscRunAHKCommandInput').focus()")
 	return
 }
-getMSCRunAHKCommand(neutron,command) {
-	toggleMSC(neutron)
-	/* 
-	static tmpScriptDir := A_ScriptDir "\Includes\tempRunAHKCommand.ahk"
-		 , header := "#Include <Default_Settings>`n"
-		 , footer := "`nExitApp"
-	while (FileExist(tmpScriptDir))
-		FileDelete, % tmpScriptDir
-	FileAppend, % header . command . footer, % tmpScriptDir
-	while (!FileExist(tmpScriptDir))
-		Sleep, 10
-	Run % tmpScriptDir,,UseErrorLevel,PID
-	if ErrorLevel
-		t(A_LastError) 
-	*/
-	static Shell   := ComObjCreate("WScript.Shell")
-		 , AhkPath := "C:\Program Files\AutoHotkey\AutoHotkey.exe"
-		 , header  := "#Include <Default_Settings>`n"
-		 , footer  := "`nExitApp"
-		 , Params  := ""
-	Script  := header . command . footer
-	Name := "\\.\pipe\AHK_MSC_" A_TickCount
-	Pipe := []
-	Loop, 3
-	{
-		Pipe[A_Index] := DllCall("CreateNamedPipe"
-		, "Str", Name
-		, "UInt", 2, "UInt", 0
-		, "UInt", 255, "UInt", 0
-		, "UInt", 0, "UPtr", 0
-		, "UPtr", 0, "UPtr")
-	}
-	if !FileExist(AhkPath)
-		throw Exception("AutoHotkey runtime not found: " AhkPath)
-	if (A_IsCompiled && AhkPath == A_ScriptFullPath)
-		AhkPath .= " /E"
-	if FileExist(Name) 	{
-		Exec := Shell.Exec(AhkPath " /CP65001 " Name " " Params)
-		DllCall("ConnectNamedPipe", "UPtr", Pipe[2], "UPtr", 0)
-		DllCall("ConnectNamedPipe", "UPtr", Pipe[3], "UPtr", 0)
-		FileOpen(Pipe[3], "h", "UTF-8").Write(Script)
-	}
-	else ; Running under WINE with improperly implemented pipes
-	{
-		FileOpen(Name := "AHK_MSC_TMP.ahk", "w").Write(Script)
-		Exec := Shell.Exec(AhkPath " /CP65001 " Name " " Params)
-	}
-	Loop, 3
-		DllCall("CloseHandle", "UPtr", Pipe[A_Index])
-	return Exec
-}
-mscAddElements() {
-	for key, value in MSC_Search {
-		vURL := StrReplace(value, "REPLACEME", uriEncode(gui_SearchEdit))
-		DMD_Run(vURL)
-		Search_Title := RegExReplace(value, "s).*?(\d{12}).*?(?=\d{12}|$)", "$1`r`n")
-		If (Title = "" ? Title := Search_Title : Title := Title)	
-			t("<i style='font-size:0.75rem'>" vURL "</i>",{title:gui_SearchEdit,time:3000,stack:1}) 
-	}
-	MSC_Search := [] ; reset for adding search urls into MSC_Search
-}
+getMSCRunAHKCommand(nuetron,command) {
+    	toggleMSC(neutron)
+    	static Shell   := ComObjCreate("WScript.Shell")
+    		 , AhkPath := "C:\Program Files\AutoHotkey\AutoHotkey.exe"
+    		 , header  := "#Include <Default_Settings>`n"
+    		 , footer  := "`nExitApp"
+    		 , Params  := ""
+    	Script := header . command . footer
+    	Name   := "\\.\pipe\AHK_MSC_" A_TickCount
+    	Pipe   := []
+    	Loop, 3
+    	{
+    		Pipe[A_Index] := DllCall("CreateNamedPipe"
+    							   , "Str", Name
+    							   , "UInt", 2, "UInt", 0
+    							   , "UInt", 255, "UInt", 0
+    							   , "UInt", 0, "UPtr", 0
+    							   , "UPtr", 0, "UPtr")
+    	}
+    	if !FileExist(AhkPath)
+    		throw Exception("AutoHotkey runtime not found: " AhkPath)
+    	if (A_IsCompiled && AhkPath == A_ScriptFullPath)
+    		AhkPath .= " /E"
+    	if FileExist(Name) 	{
+    		Exec := Shell.Exec(AhkPath " /CP65001 " Name " " Params)
+    		DllCall("ConnectNamedPipe", "UPtr", Pipe[2], "UPtr", 0)
+    		DllCall("ConnectNamedPipe", "UPtr", Pipe[3], "UPtr", 0)
+    		FileOpen(Pipe[3], "h", "UTF-8").Write(Script)
+    	}
+    	else ; Running under WINE with improperly implemented pipes
+    	{
+    		FileOpen(Name := "AHK_MSC_TMP.ahk", "w").Write(Script)
+    		Exec := Shell.Exec(AhkPath " /CP65001 " Name " " Params)
+    	}
+    	Loop, 3
+    		DllCall("CloseHandle", "UPtr", Pipe[A_Index])
+    	return Exec
+    }
 
 ; NOTE: Have to use a goSub because their are functions within the Case statements. Otherwise errors out with nested functions
 setCommands:
@@ -366,5 +299,6 @@ return
 
 ; testing purposes function
 xxyy(neutron,event) {
-	Notify().AddWindow(event, {Title:"Title"})
+	; Notify().AddWindow(event, {Title:"Title"})
+	; t(event)
 }

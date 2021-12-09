@@ -42,7 +42,7 @@ $(document).keyup(function (event) {
     }
 
     if ($("#mscSearchInput").length) {
-      ahk.getMSCCommand($("#mscSearchInput").val())
+      ahk.setMSCSearchParam($("#mscSearchInput").val())
     }
 
     if ($("#mscRunAHKCommandInput").length) {
@@ -247,6 +247,7 @@ function highlightNextDiv(next) {
     .children("#divResultsCommand")
     .removeClass("resultSelected")
 
+  // ahk.xxyy(next)
   // to auto scroll when highligh is past the preview of the GUI
   if (next >= scrollInt) {
     $(".results").scrollTo(".resultSelected")
