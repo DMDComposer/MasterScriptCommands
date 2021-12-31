@@ -5,6 +5,7 @@
 #Include includes\mscSearchEngine.ahk
 #Include includes\mscRunAHKCommand.ahk
 ; NOTE: Must run on admin to enable MSC toggle on all windows
+; TODO: Add dark/light mode depending on time for background colors
 if (!A_IsAdmin) { ;http://ahkscript.org/docs/Variables.htm#IsAdmin
 	Run *RunAs "%A_ScriptFullPath%"  ; Requires v1.0.92.01+
 	ExitApp
