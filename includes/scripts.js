@@ -52,11 +52,15 @@ $(document).keyup(function (event) {
   // Esc key will close neutron instead of closing MSC
   if (event.keyCode == 27) {
     // ahk.mscEscapeKey()
-    ahk.resetMSCWnd()
+    ahk.resetMSCWnd("")
   }
-  // alt+F12 key will open developer tools
+  // F12 key will open developer tools
   if (event.keyCode == 123) {
     ahk.runIEChooser()
+  }
+  // F11 key will reload script
+  if (event.keyCode == 122) {
+    ahk.reloadScript()
   }
 })
 

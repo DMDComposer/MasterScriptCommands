@@ -39,9 +39,7 @@ t("Master Script Commands")
 return
 
 ; NOTE: Summon / Dismiss MSC Neutron Window
-RAlt::
-toggleMSC(neutron)
-return
+RAlt::toggleMSC(neutron)
 
 getWndDefaultPos(neutron, wndUID) {
 	DetectHiddenWindows, On
@@ -172,6 +170,9 @@ mscEscapeKey(neutron) {
 oDir_PathsTrue(event) {
 	global oDirs
 	return (oDirs.HasKey(event) || oDirs.HasKey("dir " MasterScriptCommands) ? true : false)
+}
+reloadScript(neutron) {
+	Reload
 }
 resetMSCWnd(neutron, ByRef wndDefPos) {
 	global int, wndUID
