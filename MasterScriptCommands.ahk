@@ -5,6 +5,7 @@
 #Include includes\mscSearchEngine.ahk
 #Include includes\mscRunAHKCommand.ahk
 ; NOTE: Must run on admin to enable MSC toggle on all windows
+; NOTE: If using WinWait or While loop to wait for something, it could freeze up MSC. Set a limit to the time wait.
 ; TODO: Add dark/light mode depending on time for background colors
 if (!A_IsAdmin) { ;http://ahkscript.org/docs/Variables.htm#IsAdmin
 	Run *RunAs "%A_ScriptFullPath%"  ; Requires v1.0.92.01+
@@ -102,17 +103,18 @@ getListOfCommands() {
 	    {
 	        Command := RegExMatch(A_LoopReadLine,"iO)(?<=\x22).*(?=\x22)", oCommand)
 	        Command := oCommand.Value
-	        ; mCommand  := RegExReplace(SubStr(Command,1,InStr(Command,"|")-2), "O)\x22", "$1") ; If multiple commands, just grab first one and remove extra "
 	        mPos    := RegExMatch(Command, "O)\s?,\s?", "$1") ; If multiple commands, just grab first one and remove extra "
 	        Comment := RegExMatch(A_LoopReadLine,"iO);(\s?).*", oComment) ; Grab the comment inside ""
 	        Comment := RegExReplace(oComment.Value, ";~?\s?", "")
 	        if (!Command)
 	            Continue
 	        if (mPos) {
+				; ex: Case: "entry1", "entry2":
+				; if errors with mulltiple command list, check below for Regex/Substr
 	            mCommand1 := SubStr(Command,1,mPos-2)
-	            mCommand1 := RegExReplace(mCommand1, "\x22?\s?,?\s?\x22?", "")
-	            mCommand2 := SubStr(Command,mPos,StrLen(Command))
-	            mCommand2 := RegExReplace(mCommand2, "\x22?\s?,?\s?\x22?", "")
+	            mCommand1 := RegExReplace(mCommand1, "\x22\s?,?\s\x22?", "")
+	            mCommand2 := SubStr(Command,mPos+3,StrLen(Command))
+	            ; mCommand2 := RegExReplace(mCommand2, "\x22?\s?,?\s\x22?", "")
 	            oCommands[mCommand1] := Comment
 	            oCommands[mCommand2] := Comment
 	        }
@@ -297,6 +299,6 @@ return
 
 ; testing purposes function
 xxyy(neutron,event) {
-	; Notify().AddWindow(event, {Title:"Title"})
+	Notify().AddWindow(event, {Title:"Title"})
 	; t(event)
 }

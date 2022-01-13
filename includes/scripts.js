@@ -25,6 +25,12 @@
   }
 })(jQuery)
 
+// Attempt to disable JS errors that break AHK scripts
+$(document).ready(function () {
+  this.ScriptErrorsSuppressed = true
+  console.warn = function () {}
+})
+
 function getFaIcon(icon) {
   return '<i class="fa fa-' + icon + '"></i>' + " " // icon + spacer
 }
@@ -61,6 +67,10 @@ $(document).keyup(function (event) {
   // F11 key will reload script
   if (event.keyCode == 122) {
     ahk.reloadScript()
+  }
+  // F5 key will reload script
+  if (event.keyCode == 116) {
+    alert("hi")
   }
 })
 
@@ -287,6 +297,8 @@ function highlightPrevDiv(next) {
     .eq(next)
     .children("#divResultsCommand")
     .removeClass("resultSelected")
+
+  // ahk.xxyy(prev)
   return prev
 }
 
