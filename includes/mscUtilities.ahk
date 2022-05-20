@@ -3,7 +3,9 @@ class mscUtilities extends MasterScriptCommands {
     runVSCode(workspaceDir) {
         local
         global A_AppDataLocal
-        Run, "%A_AppDataLocal%\Programs\Microsoft VS Code\Code.exe" "%workspaceDir%",, Maximize, wndPID
+        cmd = "%A_AppDataLocal%\Programs\Microsoft VS Code\Code.exe" "%workspaceDir%"
+        Run, % cmd,, Maximize, wndPID
+        ; this.RunCMD(A_ComSpec . " /c " . cmd, A_AhkPath . "\..\")
         /*
          WinWait ahk_pid %wndPID%
                 WinGet, wndState, MinMax, % "ahk_pid " wndPID
@@ -20,7 +22,8 @@ class mscUtilities extends MasterScriptCommands {
     escapeBackSlash(string){
     	return RegExReplace(string, "\\", "\\$1")
     }
-    RunCMD(CmdLine, WorkingDir:="", Codepage:="CP0", Fn:="RunCMD_Output") {  ;         RunCMD v0.94        
+    RunCMD(CmdLine, WorkingDir:="", Codepage:="CP0", Fn:="RunCMD_Output") {  ;         RunCMD v0.94
+        ; ex: RunCMD(A_ComSpec . " /c " . vCmd . " | clip", A_AhkPath . "\..\")        
         Local         ; RunCMD v0.94 by SKAN on D34E/D37C @ autohotkey.com/boards/viewtopic.php?t=74647                                                             
         Global A_Args ; Based on StdOutToVar.ahk by Sean @ autohotkey.com/board/topic/15455-stdouttovar
     

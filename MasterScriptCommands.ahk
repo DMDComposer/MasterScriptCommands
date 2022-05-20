@@ -67,6 +67,7 @@ getCommand(neutron, ByRef event) {
 		oCommandsList.push(value.command)
 	}
 	for key,value in oCommandsList {
+			
 		if (event = value || oDir_PathsTrue(event)) {
 			MasterScriptCommands := event
 			resetMSCWnd(neutron, getWndDefaultPos(neutron, wndUID))
@@ -77,6 +78,7 @@ getCommand(neutron, ByRef event) {
 		}
 	}
 }
+
 getCommandTotal(neutron) {
 	global oFinalCommandsList
 	return oFinalCommandsList.Length()
@@ -91,6 +93,7 @@ getDB(neutron, event) {
 		    ,{"command":"command5","comment":"comment5"}]
 	*/
 	global oFinalCommandsList
+	Clipboard := cJson.Dumps(oFinalCommandsList)
 	return cJson.Dumps(oFinalCommandsList)
 }
 getListOfCommands() {

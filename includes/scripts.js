@@ -151,6 +151,7 @@ function show_all() {
 }
 
 function filter(query) {
+  // alert(JSON.stringify(index))
   let filter_results = index.search(query, {
     fields: {
       command: { boost: 2, bool: "OR" },
@@ -159,7 +160,7 @@ function filter(query) {
     bool: "OR",
     expand: true,
   })
-
+  // alert(JSON.stringify(filter_results[0]))
   $(".results").empty()
   for (i in filter_results) {
     let vCommand = filter_results[i].doc.command,
@@ -197,7 +198,9 @@ function onReady(event) {
   //   alert(entry[1].command)
   for (i in entry) {
     items.push(getItems(i, entry))
+    // alert(JSON.stringify(getItems(i, entry)))
     index.addDoc(getItems(i, entry))
+    // alert(JSON.stringify(index))
   }
   $(document).ready(function () {
     if ($("#search").length) {
@@ -241,20 +244,11 @@ let scrollInt = scrollIntDefault
 
 function highlightNextDiv(next) {
   const prev = next - 1
-  $(".resultsFiltered")
-    .eq(next)
-    .children("#divResultsCommand")
-    .css(setHighlightCSS)
+  $(".resultsFiltered").eq(next).children("#divResultsCommand").css(setHighlightCSS)
 
-  $(".resultsFiltered")
-    .eq(next)
-    .children("#divResultsCommand")
-    .addClass("resultSelected")
+  $(".resultsFiltered").eq(next).children("#divResultsCommand").addClass("resultSelected")
 
-  $(".resultsFiltered")
-    .eq(prev)
-    .children("#divResultsCommand")
-    .css(removeHighlightCSS)
+  $(".resultsFiltered").eq(prev).children("#divResultsCommand").css(removeHighlightCSS)
 
   $(".resultsFiltered")
     .eq(prev)
@@ -278,20 +272,11 @@ function highlightPrevDiv(next) {
     scrollInt -= scrollIntDefault
   }
 
-  $(".resultsFiltered")
-    .eq(prev)
-    .children("#divResultsCommand")
-    .css(setHighlightCSS)
+  $(".resultsFiltered").eq(prev).children("#divResultsCommand").css(setHighlightCSS)
 
-  $(".resultsFiltered")
-    .eq(prev)
-    .children("#divResultsCommand")
-    .addClass("resultSelected")
+  $(".resultsFiltered").eq(prev).children("#divResultsCommand").addClass("resultSelected")
 
-  $(".resultsFiltered")
-    .eq(next)
-    .children("#divResultsCommand")
-    .css(removeHighlightCSS)
+  $(".resultsFiltered").eq(next).children("#divResultsCommand").css(removeHighlightCSS)
 
   $(".resultsFiltered")
     .eq(next)
@@ -303,10 +288,7 @@ function highlightPrevDiv(next) {
 }
 
 function resetHighlightedDiv(next) {
-  $(".resultsFiltered")
-    .eq(next)
-    .children("#divResultsCommand")
-    .css(removeHighlightCSS)
+  $(".resultsFiltered").eq(next).children("#divResultsCommand").css(removeHighlightCSS)
 
   $(".resultsFiltered")
     .eq(next)
@@ -332,7 +314,6 @@ function resetSearchAttributes() {
   })
   $("#search:focus").css({
     "border-color": "rgba(255, 0, 0, 0.6)",
-    "box-shadow":
-      "inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6)",
+    "box-shadow": "inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6)",
   })
 }
